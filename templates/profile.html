@@ -1,0 +1,290 @@
+{% extends "base.html" %}
+
+{% block title %}Profile - Shopease{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="card">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-user-circle" style="font-size: 4rem; color: #667eea;"></i>
+                    </div>
+                    <h5 id="user-name">Loading...</h5>
+                    <p class="text-muted" id="user-email">Loading...</p>
+                </div>
+            </div>
+            
+            <div class="list-group mt-4">
+                <a href="#profile" class="list-group-item list-group-item-action active" onclick="showSection('profile')">
+                    <i class="fas fa-user me-2"></i>Profile Information
+                </a>
+                <a href="#addresses" class="list-group-item list-group-item-action" onclick="showSection('addresses')">
+                    <i class="fas fa-map-marker-alt me-2"></i>Addresses
+                </a>
+                <a href="/orders" class="list-group-item list-group-item-action">
+                    <i class="fas fa-shopping-bag me-2"></i>Order History
+                </a>
+                <a href="#" class="list-group-item list-group-item-action text-danger" onclick="logout()">
+                    <i class="fas fa-sign-out-alt me-2"></i>Logout
+                </a>
+            </div>
+        </div>
+        
+        <div class="col-lg-9">
+            <!-- Profile Information Section -->
+            <div id="profile-section" class="section-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Profile Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="profile-form">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="profile_full_name" class="form-label">Full Name</label>
+                                    <input type="text" class="form-control" id="profile_full_name" name="full_name" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="profile_email" class="form-label">Email Address</label>
+                                    <input type="email" class="form-control" id="profile_email" name="email" readonly>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="profile_phone" class="form-label">Phone Number</label>
+                                <input type="tel" class="form-control" id="profile_phone" name="phone_number">
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>Update Profile
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Addresses Section -->
+            <div id="addresses-section" class="section-content" style="display: none;">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Saved Addresses</h5>
+                        <button class="btn btn-primary btn-sm" onclick="showAddAddressForm()">
+                            <i class="fas fa-plus me-1"></i>Add Address
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div id="addresses-container">
+                            <!-- Addresses will be loaded here -->
+                        </div>
+                        
+                        <!-- Add Address Form (Hidden by default) -->
+                        <div id="add-address-form" style="display: none;">
+                            <hr>
+                            <h6>Add New Address</h6>
+                            <form id="address-form">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="address_full_name" class="form-label">Full Name</label>
+                                        <input type="text" class="form-control" id="address_full_name" name="full_name" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="address_line1" class="form-label">Address Line 1</label>
+                                        <input type="text" class="form-control" id="address_line1" name="address_line1" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <label for="city" class="form-label">City</label>
+                                        <input type="text" class="form-control" id="city" name="city" required>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label for="state" class="form-label">State</label>
+                                        <input type="text" class="form-control" id="state" name="state" required>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label for="postal_code" class="form-label">Postal Code</label>
+                                        <input type="text" class="form-control" id="postal_code" name="postal_code" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="country" class="form-label">Country</label>
+                                    <input type="text" class="form-control" id="country" name="country" value="India" required>
+                                </div>
+                                
+                                <div class="mb-3 form-check">
+                                    <input type="checkbox" class="form-check-input" id="is_default" name="is_default">
+                                    <label class="form-check-label" for="is_default">
+                                        Set as default address
+                                    </label>
+                                </div>
+                                
+                                <button type="submit" class="btn btn-primary me-2">
+                                    <i class="fas fa-save me-1"></i>Save Address
+                                </button>
+                                <button type="button" class="btn btn-secondary" onclick="hideAddAddressForm()">
+                                    Cancel
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Profile management functions
+document.addEventListener('DOMContentLoaded', async () => {
+    if (!currentUser) {
+        window.location.href = '/login';
+        return;
+    }
+    
+    loadProfileData();
+    loadAddresses();
+});
+
+function loadProfileData() {
+    if (!currentUser) return;
+    
+    document.getElementById('user-name').textContent = currentUser.full_name;
+    document.getElementById('user-email').textContent = currentUser.email;
+    document.getElementById('profile_full_name').value = currentUser.full_name;
+    document.getElementById('profile_email').value = currentUser.email;
+    document.getElementById('profile_phone').value = currentUser.phone_number || '';
+}
+
+async function loadAddresses() {
+    try {
+        const addresses = await apiCall('/users/addresses');
+        displayAddresses(addresses);
+    } catch (error) {
+        console.error('Failed to load addresses:', error);
+    }
+}
+
+function displayAddresses(addresses) {
+    const container = document.getElementById('addresses-container');
+    
+    if (addresses.length === 0) {
+        container.innerHTML = '<p class="text-muted">No saved addresses. Add your first address!</p>';
+        return;
+    }
+    
+    container.innerHTML = addresses.map(address => `
+        <div class="border rounded p-3 mb-3">
+            <div class="d-flex justify-content-between">
+                <div>
+                    <h6>${address.full_name} ${address.is_default ? '<span class="badge bg-primary">Default</span>' : ''}</h6>
+                    <p class="mb-1">${address.address_line1}</p>
+                    <p class="mb-1">${address.city}, ${address.state} - ${address.postal_code}</p>
+                    <p class="mb-0 text-muted">${address.country}</p>
+                </div>
+                <div>
+                    <button class="btn btn-sm btn-outline-danger" onclick="deleteAddress(${address.id})">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function showSection(sectionName) {
+    // Hide all sections
+    document.querySelectorAll('.section-content').forEach(section => {
+        section.style.display = 'none';
+    });
+    
+    // Remove active class from all navigation items
+    document.querySelectorAll('.list-group-item').forEach(item => {
+        item.classList.remove('active');
+    });
+    
+    // Show selected section
+    document.getElementById(`${sectionName}-section`).style.display = 'block';
+    
+    // Add active class to clicked navigation item
+    event.target.classList.add('active');
+}
+
+function showAddAddressForm() {
+    document.getElementById('add-address-form').style.display = 'block';
+}
+
+function hideAddAddressForm() {
+    document.getElementById('add-address-form').style.display = 'none';
+    document.getElementById('address-form').reset();
+}
+
+async function deleteAddress(addressId) {
+    if (!confirm('Are you sure you want to delete this address?')) return;
+    
+    try {
+        await apiCall(`/users/addresses/${addressId}`, { method: 'DELETE' });
+        showAlert('Address deleted successfully', 'success');
+        await loadAddresses();
+    } catch (error) {
+        showAlert(error.message, 'error');
+    }
+}
+
+// Form handlers
+document.getElementById('profile-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    
+    try {
+        const updatedUser = await apiCall('/users/profile', {
+            method: 'PUT',
+            body: JSON.stringify({
+                email: formData.get('email'),
+                full_name: formData.get('full_name'),
+                phone_number: formData.get('phone_number'),
+                password: 'unchanged' // This won't actually update the password
+            }),
+        });
+        
+        currentUser = updatedUser;
+        loadProfileData();
+        showAlert('Profile updated successfully', 'success');
+    } catch (error) {
+        showAlert(error.message, 'error');
+    }
+});
+
+document.getElementById('address-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    
+    const addressData = {
+        full_name: formData.get('full_name'),
+        address_line1: formData.get('address_line1'),
+        address_line2: formData.get('address_line2') || '',
+        city: formData.get('city'),
+        state: formData.get('state'),
+        postal_code: formData.get('postal_code'),
+        country: formData.get('country'),
+        is_default: formData.get('is_default') === 'on'
+    };
+    
+    try {
+        await apiCall('/users/addresses', {
+            method: 'POST',
+            body: JSON.stringify(addressData),
+        });
+        
+        showAlert('Address added successfully', 'success');
+        hideAddAddressForm();
+        await loadAddresses();
+    } catch (error) {
+        showAlert(error.message, 'error');
+    }
+});
+</script>
+{% endblock %}

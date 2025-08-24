@@ -1,0 +1,78 @@
+import os
+from fastapi import FastAPI, Request, Depends, HTTPException, status
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
+from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+import uvicorn
+from sqlalchemy.orm import Session
+
+from database import engine, SessionLocal, Base
+from routers import auth, products, cart, orders, users
+import models
+
+# Create database tables
+models.Base.metadata.create_all(bind=engine)
+
+app = FastAPI(title="Shopease E-commerce Platform", version="1.0.0")
+
+# Mount static files
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+# Templates
+templates = Jinja2Templates(directory="templates")
+
+# Include routers
+app.include_router(auth.router, prefix="/api/auth", tags=["authentication"])
+app.include_router(products.router, prefix="/api/products", tags=["products"])
+app.include_router(cart.router, prefix="/api/cart", tags=["cart"])
+app.include_router(orders.router, prefix="/api/orders", tags=["orders"])
+app.include_router(users.router, prefix="/api/users", tags=["users"])
+
+# Dependency to get database session
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+# Frontend routes
+@app.get("/", response_class=HTMLResponse)
+async def home(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
+
+@app.get("/login", response_class=HTMLResponse)
+async def login_page(request: Request):
+    return templates.TemplateResponse("login.html", {"request": request})
+
+@app.get("/register", response_class=HTMLResponse)
+async def register_page(request: Request):
+    return templates.TemplateResponse("register.html", {"request": request})
+
+@app.get("/products", response_class=HTMLResponse)
+async def products_page(request: Request):
+    return templates.TemplateResponse("products.html", {"request": request})
+
+@app.get("/product/{product_id}", response_class=HTMLResponse)
+async def product_detail_page(request: Request, product_id: int):
+    return templates.TemplateResponse("product_detail.html", {"request": request, "product_id": product_id})
+
+@app.get("/cart", response_class=HTMLResponse)
+async def cart_page(request: Request):
+    return templates.TemplateResponse("cart.html", {"request": request})
+
+@app.get("/checkout", response_class=HTMLResponse)
+async def checkout_page(request: Request):
+    return templates.TemplateResponse("checkout.html", {"request": request})
+
+@app.get("/profile", response_class=HTMLResponse)
+async def profile_page(request: Request):
+    return templates.TemplateResponse("profile.html", {"request": request})
+
+@app.get("/orders", response_class=HTMLResponse)
+async def orders_page(request: Request):
+    return templates.TemplateResponse("orders.html", {"request": request})
+
+if __name__ == "__main__":
+    uvicorn.run("main:app", host="0.0.0.0", port=5000, reload=True)

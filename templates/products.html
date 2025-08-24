@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Products - Shopease{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold">Our Products</h1>
+        <p class="lead text-muted">Discover amazing products at unbeatable prices</p>
+    </div>
+    
+    <!-- Search Bar -->
+    <div class="search-container">
+        <input type="text" id="search-input" class="search-input" placeholder="Search products...">
+        <button class="btn btn-primary" onclick="searchProducts()">
+            <i class="fas fa-search"></i>
+        </button>
+    </div>
+    
+    <!-- Category Filters -->
+    <div class="category-filters" id="categories-container">
+        <!-- Categories will be loaded here -->
+    </div>
+    
+    <!-- Products Grid -->
+    <div class="product-grid" id="products-container">
+        <!-- Products will be loaded here -->
+    </div>
+</div>
+{% endblock %}

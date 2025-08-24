@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}My Orders - Shopease{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>
+            <i class="fas fa-shopping-bag me-2"></i>My Orders
+        </h2>
+        <a href="/products" class="btn btn-primary">
+            <i class="fas fa-plus me-2"></i>Continue Shopping
+        </a>
+    </div>
+    
+    <div id="orders-container">
+        <!-- Orders will be loaded here -->
+    </div>
+</div>
+
+<script>
+// Load orders on page load
+document.addEventListener('DOMContentLoaded', async () => {
+    if (!currentUser) {
+        window.location.href = '/login';
+        return;
+    }
+    
+    await loadOrders();
+});
+</script>
+{% endblock %}
