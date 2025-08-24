@@ -143,7 +143,10 @@ def mark_notification_as_read(
             detail="Notification not found"
         )
     
-    notification.is_read = True
+    db.query(models.Notification).filter(
+        models.Notification.id == notification_id,
+        models.Notification.user_id == current_user.id
+    ).update({"is_read": True})
     db.commit()
     
     return {"message": "Notification marked as read"}

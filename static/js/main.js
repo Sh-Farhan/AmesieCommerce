@@ -91,7 +91,15 @@ async function login(email, password) {
         
         await loadCurrentUser();
         showAlert('Login successful!', 'success');
-        window.location.href = '/';
+        
+        // Redirect based on user role
+        if (currentUser.role === 'SELLER') {
+            window.location.href = '/seller/dashboard';
+        } else if (currentUser.role === 'ADMIN') {
+            window.location.href = '/admin/dashboard';
+        } else {
+            window.location.href = '/';
+        }
         
     } catch (error) {
         showAlert(error.message, 'error');
@@ -109,7 +117,7 @@ async function register(userData) {
         });
         
         showAlert('Registration successful! Please log in.', 'success');
-        window.location.href = '/login';
+        window.location.href = '/customer/login';
         
     } catch (error) {
         showAlert(error.message, 'error');
@@ -144,15 +152,13 @@ async function loadCurrentUser() {
 
 // Navigation functions
 function updateNavigation() {
-    const loginLink = document.getElementById('login-link');
-    const registerLink = document.getElementById('register-link');
+    const authDropdown = document.getElementById('auth-dropdown');
     const userDropdown = document.getElementById('userDropdown');
     const logoutLink = document.getElementById('logout-link');
     const cartLink = document.getElementById('cart-link');
     
     if (currentUser) {
-        if (loginLink) loginLink.style.display = 'none';
-        if (registerLink) registerLink.style.display = 'none';
+        if (authDropdown) authDropdown.style.display = 'none';
         if (userDropdown) userDropdown.style.display = 'block';
         if (logoutLink) logoutLink.style.display = 'none'; // Hide standalone logout
         if (cartLink) cartLink.style.display = 'block';
@@ -184,8 +190,7 @@ function updateNavigation() {
             customerMenuItems.forEach(item => item.style.display = 'block');
         }
     } else {
-        if (loginLink) loginLink.style.display = 'block';
-        if (registerLink) registerLink.style.display = 'block';
+        if (authDropdown) authDropdown.style.display = 'block';
         if (userDropdown) userDropdown.style.display = 'none';
         if (logoutLink) logoutLink.style.display = 'none';
         if (cartLink) cartLink.style.display = 'none';
@@ -658,10 +663,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         case '/orders':
             await loadOrders();
             break;
-        case '/login':
+        case '/customer/login':
+        case '/seller/login':
+        case '/admin/login':
             handleLoginForm();
             break;
-        case '/register':
+        case '/customer/register':
+        case '/seller/register':
+        case '/admin/register':
             handleRegisterForm();
             break;
         case '/checkout':

@@ -43,13 +43,34 @@ def get_db():
 async def home(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
+# Customer authentication pages
 @app.get("/login", response_class=HTMLResponse)
-async def login_page(request: Request):
-    return templates.TemplateResponse("login.html", {"request": request})
+@app.get("/customer/login", response_class=HTMLResponse)
+async def customer_login_page(request: Request):
+    return templates.TemplateResponse("customer_login.html", {"request": request})
 
 @app.get("/register", response_class=HTMLResponse)
-async def register_page(request: Request):
-    return templates.TemplateResponse("register.html", {"request": request})
+@app.get("/customer/register", response_class=HTMLResponse)
+async def customer_register_page(request: Request):
+    return templates.TemplateResponse("customer_register.html", {"request": request})
+
+# Seller authentication pages
+@app.get("/seller/login", response_class=HTMLResponse)
+async def seller_login_page(request: Request):
+    return templates.TemplateResponse("seller_login.html", {"request": request})
+
+@app.get("/seller/register", response_class=HTMLResponse)
+async def seller_register_page(request: Request):
+    return templates.TemplateResponse("seller_register.html", {"request": request})
+
+# Admin authentication pages
+@app.get("/admin/login", response_class=HTMLResponse)
+async def admin_login_page(request: Request):
+    return templates.TemplateResponse("admin_login.html", {"request": request})
+
+@app.get("/admin/register", response_class=HTMLResponse)
+async def admin_register_page(request: Request):
+    return templates.TemplateResponse("admin_register.html", {"request": request})
 
 @app.get("/products", response_class=HTMLResponse)
 async def products_page(request: Request):

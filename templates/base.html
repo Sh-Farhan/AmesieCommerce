@@ -72,15 +72,23 @@
                             <li><a class="dropdown-item" href="#" onclick="logout()"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
                         </ul>
                     </li>
-                    <li class="nav-item" id="login-link">
-                        <a class="nav-link" href="/login">
-                            <i class="fas fa-sign-in-alt me-1"></i>Login
+                    <li class="nav-item dropdown" id="auth-dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-sign-in-alt me-1"></i>Login / Register
                         </a>
-                    </li>
-                    <li class="nav-item" id="register-link">
-                        <a class="nav-link" href="/register">
-                            <i class="fas fa-user-plus me-1"></i>Register
-                        </a>
+                        <ul class="dropdown-menu">
+                            <li><h6 class="dropdown-header">Customer</h6></li>
+                            <li><a class="dropdown-item" href="/customer/login"><i class="fas fa-sign-in-alt me-2"></i>Customer Login</a></li>
+                            <li><a class="dropdown-item" href="/customer/register"><i class="fas fa-user-plus me-2"></i>Customer Register</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><h6 class="dropdown-header">Seller</h6></li>
+                            <li><a class="dropdown-item" href="/seller/login"><i class="fas fa-store me-2"></i>Seller Login</a></li>
+                            <li><a class="dropdown-item" href="/seller/register"><i class="fas fa-store me-2"></i>Become a Seller</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><h6 class="dropdown-header">Admin</h6></li>
+                            <li><a class="dropdown-item" href="/admin/login"><i class="fas fa-shield-alt me-2"></i>Admin Login</a></li>
+                            <li><a class="dropdown-item" href="/admin/register"><i class="fas fa-shield-alt me-2"></i>Admin Register</a></li>
+                        </ul>
                     </li>
                     <li class="nav-item" id="logout-link" style="display: none;">
                         <button class="nav-link btn btn-link text-white" onclick="logout()">

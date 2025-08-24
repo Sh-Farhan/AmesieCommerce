@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Registration - Shopease{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow border-warning">
+                <div class="card-header bg-warning text-dark text-center">
+                    <i class="fas fa-shield-alt" style="font-size: 2rem;"></i>
+                    <h3 class="mt-2 mb-0">Admin Access Registration</h3>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>Restricted Access:</strong> Admin registration requires authorization. Contact system administrator for approval.
+                    </div>
+                    
+                    <form id="admin-register-form">
+                        <div class="mb-3">
+                            <label for="fullName" class="form-label">
+                                <i class="fas fa-user me-2"></i>Full Name
+                            </label>
+                            <input type="text" class="form-control" id="fullName" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="email" class="form-label">
+                                <i class="fas fa-envelope me-2"></i>Official Email Address
+                            </label>
+                            <input type="email" class="form-control" id="email" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="phone" class="form-label">
+                                <i class="fas fa-phone me-2"></i>Contact Number
+                            </label>
+                            <input type="tel" class="form-control" id="phone" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="password" class="form-label">
+                                <i class="fas fa-lock me-2"></i>Password
+                            </label>
+                            <input type="password" class="form-control" id="password" required minlength="8">
+                            <div class="form-text">Password must be at least 8 characters long</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="confirmPassword" class="form-label">
+                                <i class="fas fa-lock me-2"></i>Confirm Password
+                            </label>
+                            <input type="password" class="form-control" id="confirmPassword" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="adminCode" class="form-label">
+                                <i class="fas fa-key me-2"></i>Admin Authorization Code
+                            </label>
+                            <input type="password" class="form-control" id="adminCode" required>
+                            <div class="form-text">Enter the authorization code provided by system administrator</div>
+                        </div>
+                        
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="agreeTerms" required>
+                            <label class="form-check-label" for="agreeTerms">
+                                I acknowledge admin responsibilities and agree to platform policies
+                            </label>
+                        </div>
+                        
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-warning btn-lg text-dark">
+                                <i class="fas fa-shield-alt me-2"></i>Request Admin Access
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <div class="text-center mt-4">
+                        <p class="mb-2">Already have admin access? <a href="/admin/login" class="text-primary">Sign In</a></p>
+                        <div class="d-flex justify-content-center gap-3">
+                            <a href="/customer/register" class="text-muted small">Customer Registration</a>
+                            <span class="text-muted">|</span>
+                            <a href="/seller/register" class="text-muted small">Seller Registration</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('admin-register-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+    const adminCode = document.getElementById('adminCode').value;
+    
+    if (password !== confirmPassword) {
+        showAlert('Passwords do not match', 'error');
+        return;
+    }
+    
+    // Simple admin code validation (in production, this should be more secure)
+    if (adminCode !== 'SHOPEASE_ADMIN_2024') {
+        showAlert('Invalid admin authorization code', 'error');
+        return;
+    }
+    
+    const userData = {
+        full_name: document.getElementById('fullName').value,
+        email: document.getElementById('email').value,
+        phone_number: document.getElementById('phone').value,
+        password: password
+    };
+    
+    try {
+        showSpinner();
+        
+        const response = await fetch('/api/auth/register/admin', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(userData),
+        });
+        
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.detail || 'Admin registration failed');
+        }
+        
+        showAlert('Admin registration successful! Please login to continue.', 'success');
+        window.location.href = '/admin/login';
+        
+    } catch (error) {
+        showAlert(error.message, 'error');
+    } finally {
+        hideSpinner();
+    }
+});
+</script>
+{% endblock %}

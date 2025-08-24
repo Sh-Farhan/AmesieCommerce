@@ -1,5 +1,5 @@
 from datetime import timedelta
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Form
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
@@ -20,17 +20,99 @@ def register_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
             detail="Email already registered"
         )
     
-    # Create new user
+    # Create new user with CUSTOMER role by default
     hashed_password = get_password_hash(user.password)
     db_user = models.User(
         email=user.email,
         hashed_password=hashed_password,
         full_name=user.full_name,
-        phone_number=user.phone_number
+        phone_number=user.phone_number,
+        role=models.UserRole.CUSTOMER
     )
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
+    return db_user
+
+@router.post("/register/seller")
+def register_seller(
+    full_name: str = Form(...),
+    email: str = Form(...),
+    phone_number: str = Form(...),
+    password: str = Form(...),
+    store_name: str = Form(...),
+    store_description: str = Form(None),
+    store_address: str = Form(...),
+    business_license: str = Form(None),
+    gst_number: str = Form(None),
+    bank_account_number: str = Form(None),
+    bank_ifsc_code: str = Form(None),
+    db: Session = Depends(get_db)
+):
+    # Check if user already exists
+    db_user = db.query(models.User).filter(models.User.email == email).first()
+    if db_user:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Email already registered"
+        )
+    
+    # Create new seller user
+    hashed_password = get_password_hash(password)
+    db_user = models.User(
+        email=email,
+        hashed_password=hashed_password,
+        full_name=full_name,
+        phone_number=phone_number,
+        role=models.UserRole.SELLER
+    )
+    
+    db.add(db_user)
+    db.commit()
+    db.refresh(db_user)
+    
+    # Create seller profile
+    db_seller = models.Seller(
+        user_id=db_user.id,
+        store_name=store_name,
+        store_description=store_description,
+        store_logo_url=None,  # Can be added later via profile update
+        business_license=business_license,
+        gst_number=gst_number,
+        bank_account_number=bank_account_number,
+        bank_ifsc_code=bank_ifsc_code,
+        store_address=store_address
+    )
+    
+    db.add(db_seller)
+    db.commit()
+    
+    return {"message": "Seller registered successfully", "user_id": db_user.id}
+
+@router.post("/register/admin", response_model=schemas.User)
+def register_admin(user: schemas.UserCreate, db: Session = Depends(get_db)):
+    # Check if user already exists
+    db_user = db.query(models.User).filter(models.User.email == user.email).first()
+    if db_user:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Email already registered"
+        )
+    
+    # Create new admin user
+    hashed_password = get_password_hash(user.password)
+    db_user = models.User(
+        email=user.email,
+        hashed_password=hashed_password,
+        full_name=user.full_name,
+        phone_number=user.phone_number,
+        role=models.UserRole.ADMIN
+    )
+    
+    db.add(db_user)
+    db.commit()
+    db.refresh(db_user)
+    
     return db_user
 
 @router.post("/login", response_model=schemas.Token)
