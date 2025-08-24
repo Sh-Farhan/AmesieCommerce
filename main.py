@@ -8,7 +8,7 @@ import uvicorn
 from sqlalchemy.orm import Session
 
 from database import engine, SessionLocal, Base
-from routers import auth, products, cart, orders, users
+from routers import auth, products, cart, orders, users, sellers
 import models
 
 # Create database tables
@@ -28,6 +28,7 @@ app.include_router(products.router, prefix="/api/products", tags=["products"])
 app.include_router(cart.router, prefix="/api/cart", tags=["cart"])
 app.include_router(orders.router, prefix="/api/orders", tags=["orders"])
 app.include_router(users.router, prefix="/api/users", tags=["users"])
+app.include_router(sellers.router, prefix="/api/sellers", tags=["sellers"])
 
 # Dependency to get database session
 def get_db():
@@ -73,6 +74,22 @@ async def profile_page(request: Request):
 @app.get("/orders", response_class=HTMLResponse)
 async def orders_page(request: Request):
     return templates.TemplateResponse("orders.html", {"request": request})
+
+@app.get("/seller/dashboard", response_class=HTMLResponse)
+async def seller_dashboard_page(request: Request):
+    return templates.TemplateResponse("seller_dashboard.html", {"request": request})
+
+@app.get("/seller/products", response_class=HTMLResponse)
+async def seller_products_page(request: Request):
+    return templates.TemplateResponse("seller_products.html", {"request": request})
+
+@app.get("/seller/orders", response_class=HTMLResponse)
+async def seller_orders_page(request: Request):
+    return templates.TemplateResponse("seller_orders.html", {"request": request})
+
+@app.get("/seller/profile", response_class=HTMLResponse)
+async def seller_profile_page(request: Request):
+    return templates.TemplateResponse("seller_profile.html", {"request": request})
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=5000, reload=True)

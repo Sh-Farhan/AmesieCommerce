@@ -45,10 +45,32 @@
                             <span class="badge bg-light text-dark ms-1" id="cart-count" style="display: none;">0</span>
                         </a>
                     </li>
-                    <li class="nav-item" id="profile-link" style="display: none;">
-                        <a class="nav-link" href="/profile">
-                            <i class="fas fa-user me-1"></i><span>Profile</span>
+                    <li class="nav-item dropdown" id="userDropdown" style="display: none;">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user"></i> <span id="userName"></span>
                         </a>
+                        <ul class="dropdown-menu">
+                            <!-- Customer menu items -->
+                            <li class="customer-menu"><a class="dropdown-item" href="/profile"><i class="fas fa-user-circle me-2"></i>Profile</a></li>
+                            <li class="customer-menu"><a class="dropdown-item" href="/orders"><i class="fas fa-shopping-bag me-2"></i>My Orders</a></li>
+                            <li class="customer-menu"><a class="dropdown-item" href="/wishlist"><i class="fas fa-heart me-2"></i>Wishlist</a></li>
+                            
+                            <!-- Seller menu items -->
+                            <li class="seller-menu" style="display: none;"><a class="dropdown-item" href="/seller/dashboard"><i class="fas fa-chart-pie me-2"></i>Seller Dashboard</a></li>
+                            <li class="seller-menu" style="display: none;"><a class="dropdown-item" href="/seller/products"><i class="fas fa-box me-2"></i>My Products</a></li>
+                            <li class="seller-menu" style="display: none;"><a class="dropdown-item" href="/seller/orders"><i class="fas fa-shopping-cart me-2"></i>Manage Orders</a></li>
+                            <li class="seller-menu" style="display: none;"><a class="dropdown-item" href="/seller/profile"><i class="fas fa-store me-2"></i>Store Profile</a></li>
+                            <li class="seller-menu" style="display: none;"><hr class="dropdown-divider"></li>
+                            <li class="seller-menu" style="display: none;"><a class="dropdown-item" href="/profile"><i class="fas fa-user-circle me-2"></i>Account Settings</a></li>
+                            
+                            <!-- Admin menu items -->
+                            <li class="admin-menu" style="display: none;"><a class="dropdown-item" href="/admin/dashboard"><i class="fas fa-tachometer-alt me-2"></i>Admin Dashboard</a></li>
+                            <li class="admin-menu" style="display: none;"><a class="dropdown-item" href="/admin/users"><i class="fas fa-users me-2"></i>Manage Users</a></li>
+                            <li class="admin-menu" style="display: none;"><a class="dropdown-item" href="/admin/sellers"><i class="fas fa-store me-2"></i>Manage Sellers</a></li>
+                            
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" onclick="logout()"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                        </ul>
                     </li>
                     <li class="nav-item" id="login-link">
                         <a class="nav-link" href="/login">

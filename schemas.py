@@ -1,12 +1,28 @@
 from pydantic import BaseModel, EmailStr
 from typing import Optional, List
 from datetime import datetime
+from enum import Enum
+
+# Enums
+class UserRole(str, Enum):
+    ADMIN = "admin"
+    SELLER = "seller"
+    CUSTOMER = "customer"
+
+class NotificationType(str, Enum):
+    ORDER_PLACED = "order_placed"
+    ORDER_CONFIRMED = "order_confirmed"
+    ORDER_SHIPPED = "order_shipped"
+    ORDER_DELIVERED = "order_delivered"
+    ORDER_CANCELLED = "order_cancelled"
+    PAYMENT_RECEIVED = "payment_received"
 
 # User schemas
 class UserBase(BaseModel):
     email: EmailStr
     full_name: str
     phone_number: Optional[str] = None
+    role: UserRole = UserRole.CUSTOMER
 
 class UserCreate(UserBase):
     password: str
@@ -50,15 +66,27 @@ class ProductBase(BaseModel):
     image_url: Optional[str] = None
     stock_quantity: int = 0
     category_id: int
+    seller_id: Optional[int] = None
 
 class ProductCreate(ProductBase):
     pass
+
+# Forward declaration for Seller
+class SellerBasic(BaseModel):
+    id: int
+    store_name: str
+    store_logo_url: Optional[str] = None
+    rating: float = 0.0
+    
+    class Config:
+        from_attributes = True
 
 class Product(ProductBase):
     id: int
     is_active: bool
     created_at: datetime
     category: Optional[Category] = None
+    seller: Optional[SellerBasic] = None
     
     class Config:
         from_attributes = True
@@ -164,6 +192,60 @@ class WishlistItem(WishlistItemBase):
     user_id: int
     created_at: datetime
     product: Product
+    
+    class Config:
+        from_attributes = True
+
+# Seller schemas
+class SellerBase(BaseModel):
+    store_name: str
+    store_description: Optional[str] = None
+    store_logo_url: Optional[str] = None
+    business_license: Optional[str] = None
+    gst_number: Optional[str] = None
+    bank_account_number: Optional[str] = None
+    bank_ifsc_code: Optional[str] = None
+    store_address: Optional[str] = None
+
+class SellerCreate(SellerBase):
+    pass
+
+class SellerUpdate(BaseModel):
+    store_name: Optional[str] = None
+    store_description: Optional[str] = None
+    store_logo_url: Optional[str] = None
+    bank_account_number: Optional[str] = None
+    bank_ifsc_code: Optional[str] = None
+    store_address: Optional[str] = None
+
+class Seller(SellerBase):
+    id: int
+    user_id: int
+    is_verified: bool
+    is_active: bool
+    total_sales: float
+    rating: float
+    created_at: datetime
+    user: User
+    
+    class Config:
+        from_attributes = True
+
+# Notification schemas
+class NotificationBase(BaseModel):
+    title: str
+    message: str
+    notification_type: NotificationType
+    order_id: Optional[int] = None
+
+class NotificationCreate(NotificationBase):
+    user_id: int
+
+class Notification(NotificationBase):
+    id: int
+    user_id: int
+    is_read: bool
+    created_at: datetime
     
     class Config:
         from_attributes = True

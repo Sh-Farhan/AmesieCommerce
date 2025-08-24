@@ -146,23 +146,47 @@ async function loadCurrentUser() {
 function updateNavigation() {
     const loginLink = document.getElementById('login-link');
     const registerLink = document.getElementById('register-link');
-    const profileLink = document.getElementById('profile-link');
+    const userDropdown = document.getElementById('userDropdown');
     const logoutLink = document.getElementById('logout-link');
     const cartLink = document.getElementById('cart-link');
     
     if (currentUser) {
         if (loginLink) loginLink.style.display = 'none';
         if (registerLink) registerLink.style.display = 'none';
-        if (profileLink) {
-            profileLink.style.display = 'block';
-            profileLink.textContent = currentUser.full_name;
-        }
-        if (logoutLink) logoutLink.style.display = 'block';
+        if (userDropdown) userDropdown.style.display = 'block';
+        if (logoutLink) logoutLink.style.display = 'none'; // Hide standalone logout
         if (cartLink) cartLink.style.display = 'block';
+        
+        // Update user name in dropdown
+        const userName = document.getElementById('userName');
+        if (userName) {
+            userName.textContent = currentUser.full_name || currentUser.email;
+        }
+        
+        // Show/hide role-specific menu items
+        const customerMenuItems = document.querySelectorAll('.customer-menu');
+        const sellerMenuItems = document.querySelectorAll('.seller-menu');
+        const adminMenuItems = document.querySelectorAll('.admin-menu');
+        
+        // Hide all role-specific menus first
+        customerMenuItems.forEach(item => item.style.display = 'none');
+        sellerMenuItems.forEach(item => item.style.display = 'none');
+        adminMenuItems.forEach(item => item.style.display = 'none');
+        
+        // Show appropriate menu based on user role
+        if (currentUser.role === 'CUSTOMER') {
+            customerMenuItems.forEach(item => item.style.display = 'block');
+        } else if (currentUser.role === 'SELLER') {
+            sellerMenuItems.forEach(item => item.style.display = 'block');
+        } else if (currentUser.role === 'ADMIN') {
+            adminMenuItems.forEach(item => item.style.display = 'block');
+            // Admins can also see customer features
+            customerMenuItems.forEach(item => item.style.display = 'block');
+        }
     } else {
         if (loginLink) loginLink.style.display = 'block';
         if (registerLink) registerLink.style.display = 'block';
-        if (profileLink) profileLink.style.display = 'none';
+        if (userDropdown) userDropdown.style.display = 'none';
         if (logoutLink) logoutLink.style.display = 'none';
         if (cartLink) cartLink.style.display = 'none';
     }
@@ -210,10 +234,29 @@ function displayProducts(products) {
             <div class="product-info">
                 <h5 class="product-title">${product.name}</h5>
                 <p class="text-muted">${product.description || ''}</p>
+                ${product.seller ? `
+                    <div class="seller-info mb-2">
+                        <small class="text-muted">
+                            <i class="fas fa-store me-1"></i>
+                            Sold by: <strong>${product.seller.store_name}</strong>
+                            <span class="text-warning ms-2">
+                                ${'★'.repeat(Math.round(product.seller.rating))}${'☆'.repeat(5 - Math.round(product.seller.rating))}
+                                (${product.seller.rating.toFixed(1)})
+                            </span>
+                        </small>
+                    </div>
+                ` : ''}
                 <div class="product-price">₹${product.price}</div>
-                <button class="btn btn-primary w-100" onclick="addToCart(${product.id})" ${!currentUser ? 'disabled' : ''}>
-                    ${!currentUser ? 'Login to Add to Cart' : 'Add to Cart'}
-                </button>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-primary flex-fill" onclick="addToCart(${product.id})" ${!currentUser ? 'disabled' : ''}>
+                        ${!currentUser ? 'Login to Add to Cart' : 'Add to Cart'}
+                    </button>
+                    ${product.seller ? `
+                        <button class="btn btn-outline-info btn-sm" onclick="viewStore(${product.seller.id})" title="View Store">
+                            <i class="fas fa-store"></i>
+                        </button>
+                    ` : ''}
+                </div>
             </div>
         </div>
     `).join('');
@@ -644,6 +687,75 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
+// Store and notification functions
+function viewStore(sellerId) {
+    // Show store details modal or redirect to store page
+    showAlert('Store details coming soon!', 'info');
+}
+
+// Load user notifications
+async function loadNotifications() {
+    if (!currentUser) return;
+    
+    try {
+        const notifications = await apiCall('/users/notifications');
+        displayNotifications(notifications);
+        updateNotificationBadge(notifications.filter(n => !n.is_read).length);
+    } catch (error) {
+        console.error('Failed to load notifications:', error);
+    }
+}
+
+function displayNotifications(notifications) {
+    const container = document.getElementById('notifications-container');
+    if (!container) return;
+    
+    if (notifications.length === 0) {
+        container.innerHTML = '<div class="text-center text-muted py-3">No notifications</div>';
+        return;
+    }
+    
+    container.innerHTML = notifications.map(notification => `
+        <div class="notification-item ${notification.is_read ? '' : 'unread'}" data-id="${notification.id}">
+            <div class="d-flex justify-content-between align-items-start">
+                <div class="flex-grow-1">
+                    <h6 class="mb-1">${notification.title}</h6>
+                    <p class="mb-1 text-muted">${notification.message}</p>
+                    <small class="text-muted">${new Date(notification.created_at).toLocaleString()}</small>
+                </div>
+                ${!notification.is_read ? `
+                    <button class="btn btn-sm btn-outline-primary" onclick="markAsRead(${notification.id})">
+                        Mark as read
+                    </button>
+                ` : ''}
+            </div>
+        </div>
+    `).join('');
+}
+
+async function markAsRead(notificationId) {
+    try {
+        await apiCall(`/users/notifications/${notificationId}/read`, {
+            method: 'PUT'
+        });
+        await loadNotifications();
+    } catch (error) {
+        showAlert('Failed to mark notification as read', 'error');
+    }
+}
+
+function updateNotificationBadge(unreadCount) {
+    const badge = document.getElementById('notification-badge');
+    if (badge) {
+        if (unreadCount > 0) {
+            badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
+            badge.style.display = 'inline';
+        } else {
+            badge.style.display = 'none';
+        }
+    }
+}
+
 // Export functions for global access
 window.login = login;
 window.logout = logout;
@@ -655,3 +767,6 @@ window.filterByCategory = filterByCategory;
 window.searchProducts = searchProducts;
 window.proceedToCheckout = proceedToCheckout;
 window.createOrder = createOrder;
+window.viewStore = viewStore;
+window.loadNotifications = loadNotifications;
+window.markAsRead = markAsRead;

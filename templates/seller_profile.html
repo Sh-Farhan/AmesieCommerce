@@ -1,0 +1,279 @@
+{% extends "base.html" %}
+
+{% block title %}Store Profile - Seller Dashboard{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-lg-3">
+            <div class="card">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-store" style="font-size: 4rem; color: #667eea;"></i>
+                    </div>
+                    <h5 id="store-name">Loading...</h5>
+                    <p class="text-muted" id="seller-email">Loading...</p>
+                    <div class="d-flex justify-content-center align-items-center mb-2">
+                        <span class="text-warning me-2">★★★★☆</span>
+                        <span id="store-rating">0.0</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="list-group mt-4">
+                <a href="/seller/dashboard" class="list-group-item list-group-item-action">
+                    <i class="fas fa-chart-pie me-2"></i>Dashboard
+                </a>
+                <a href="/seller/products" class="list-group-item list-group-item-action">
+                    <i class="fas fa-box me-2"></i>My Products
+                </a>
+                <a href="/seller/orders" class="list-group-item list-group-item-action">
+                    <i class="fas fa-shopping-bag me-2"></i>Orders
+                </a>
+                <a href="/seller/profile" class="list-group-item list-group-item-action active">
+                    <i class="fas fa-user me-2"></i>Store Profile
+                </a>
+                <a href="/" class="list-group-item list-group-item-action">
+                    <i class="fas fa-home me-2"></i>Back to Store
+                </a>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="col-lg-9">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>Store Profile</h2>
+                <div class="d-flex align-items-center">
+                    <span class="badge bg-success me-2">
+                        <i class="fas fa-check-circle me-1"></i>Verified Store
+                    </span>
+                    <span class="badge bg-primary">
+                        <i class="fas fa-star me-1"></i>Active
+                    </span>
+                </div>
+            </div>
+            
+            <!-- Store Information Form -->
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Store Information</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="profileForm">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="storeName" class="form-label">Store Name</label>
+                                            <input type="text" class="form-control" id="storeName" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="storeLogoUrl" class="form-label">Store Logo URL</label>
+                                            <input type="url" class="form-control" id="storeLogoUrl">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="storeDescription" class="form-label">Store Description</label>
+                                    <textarea class="form-control" id="storeDescription" rows="4"></textarea>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="storeAddress" class="form-label">Store Address</label>
+                                    <textarea class="form-control" id="storeAddress" rows="3"></textarea>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="bankAccount" class="form-label">Bank Account Number</label>
+                                            <input type="text" class="form-control" id="bankAccount">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="bankIfsc" class="form-label">Bank IFSC Code</label>
+                                            <input type="text" class="form-control" id="bankIfsc">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="d-grid">
+                                    <button type="button" class="btn btn-primary" onclick="updateProfile()">
+                                        <i class="fas fa-save me-2"></i>Update Profile
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Store Statistics -->
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Store Statistics</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span>Total Sales</span>
+                                    <strong id="totalSales">₹0</strong>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span>Store Rating</span>
+                                    <div>
+                                        <span class="text-warning me-1">★★★★☆</span>
+                                        <strong id="storeRating">0.0</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span>Verification Status</span>
+                                    <span class="badge bg-success">Verified</span>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span>Store Status</span>
+                                    <span class="badge bg-primary">Active</span>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span>Member Since</span>
+                                    <span id="memberSince">-</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Business Information -->
+                    <div class="card mt-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">Business Information</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label text-muted">Business License</label>
+                                <p id="businessLicense" class="mb-0">-</p>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label text-muted">GST Number</label>
+                                <p id="gstNumber" class="mb-0">-</p>
+                            </div>
+                            
+                            <div class="mb-0">
+                                <label class="form-label text-muted">Contact Information</label>
+                                <p id="contactInfo" class="mb-0">-</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let sellerProfile = null;
+
+document.addEventListener('DOMContentLoaded', async () => {
+    if (!currentUser || currentUser.role !== 'SELLER') {
+        showAlert('Access denied. Seller role required.', 'error');
+        window.location.href = '/login';
+        return;
+    }
+    
+    await loadSellerProfile();
+});
+
+async function loadSellerProfile() {
+    try {
+        sellerProfile = await apiCall('/sellers/profile');
+        populateForm();
+        updateStatistics();
+    } catch (error) {
+        console.error('Failed to load seller profile:', error);
+        showAlert('Failed to load profile information', 'error');
+    }
+}
+
+function populateForm() {
+    if (!sellerProfile) return;
+    
+    // Update sidebar
+    document.getElementById('store-name').textContent = sellerProfile.store_name;
+    document.getElementById('seller-email').textContent = sellerProfile.user.email;
+    document.getElementById('store-rating').textContent = sellerProfile.rating.toFixed(1);
+    
+    const ratingStars = Math.round(sellerProfile.rating);
+    const starsElement = document.querySelector('.text-warning');
+    starsElement.textContent = '★'.repeat(ratingStars) + '☆'.repeat(5 - ratingStars);
+    
+    // Populate form fields
+    document.getElementById('storeName').value = sellerProfile.store_name || '';
+    document.getElementById('storeDescription').value = sellerProfile.store_description || '';
+    document.getElementById('storeLogoUrl').value = sellerProfile.store_logo_url || '';
+    document.getElementById('storeAddress').value = sellerProfile.store_address || '';
+    document.getElementById('bankAccount').value = sellerProfile.bank_account_number || '';
+    document.getElementById('bankIfsc').value = sellerProfile.bank_ifsc_code || '';
+}
+
+function updateStatistics() {
+    if (!sellerProfile) return;
+    
+    document.getElementById('totalSales').textContent = `₹${sellerProfile.total_sales.toLocaleString()}`;
+    document.getElementById('storeRating').textContent = sellerProfile.rating.toFixed(1);
+    document.getElementById('memberSince').textContent = new Date(sellerProfile.created_at).toLocaleDateString();
+    
+    document.getElementById('businessLicense').textContent = sellerProfile.business_license || 'Not provided';
+    document.getElementById('gstNumber').textContent = sellerProfile.gst_number || 'Not provided';
+    document.getElementById('contactInfo').textContent = sellerProfile.user.phone_number || 'Not provided';
+    
+    // Update rating stars in statistics
+    const statsStarsElement = document.querySelectorAll('.text-warning')[1];
+    const ratingStars = Math.round(sellerProfile.rating);
+    statsStarsElement.textContent = '★'.repeat(ratingStars) + '☆'.repeat(5 - ratingStars);
+}
+
+async function updateProfile() {
+    const updateData = {
+        store_name: document.getElementById('storeName').value,
+        store_description: document.getElementById('storeDescription').value,
+        store_logo_url: document.getElementById('storeLogoUrl').value,
+        store_address: document.getElementById('storeAddress').value,
+        bank_account_number: document.getElementById('bankAccount').value,
+        bank_ifsc_code: document.getElementById('bankIfsc').value
+    };
+    
+    try {
+        const updatedProfile = await apiCall('/sellers/profile', {
+            method: 'PUT',
+            body: JSON.stringify(updateData)
+        });
+        
+        sellerProfile = updatedProfile;
+        populateForm();
+        updateStatistics();
+        
+        showAlert('Profile updated successfully!', 'success');
+    } catch (error) {
+        showAlert('Failed to update profile: ' + error.message, 'error');
+    }
+}
+</script>
+{% endblock %}

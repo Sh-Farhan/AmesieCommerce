@@ -1,8 +1,24 @@
-from sqlalchemy import Column, Integer, String, Float, Boolean, DateTime, Text, ForeignKey, Table
+from sqlalchemy import Column, Integer, String, Float, Boolean, DateTime, Text, ForeignKey, Table, Enum
+import enum
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from database import Base
+
+# User roles enum
+class UserRole(str, enum.Enum):
+    ADMIN = "admin"
+    SELLER = "seller"
+    CUSTOMER = "customer"
+
+# Notification types enum
+class NotificationType(str, enum.Enum):
+    ORDER_PLACED = "order_placed"
+    ORDER_CONFIRMED = "order_confirmed"
+    ORDER_SHIPPED = "order_shipped"
+    ORDER_DELIVERED = "order_delivered"
+    ORDER_CANCELLED = "order_cancelled"
+    PAYMENT_RECEIVED = "payment_received"
 
 class User(Base):
     __tablename__ = "users"
@@ -12,6 +28,7 @@ class User(Base):
     hashed_password = Column(String, nullable=False)
     full_name = Column(String, nullable=False)
     phone_number = Column(String, unique=True, nullable=True)
+    role = Column(Enum(UserRole), default=UserRole.CUSTOMER, nullable=False)
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime, server_default=func.now())
     
@@ -21,6 +38,8 @@ class User(Base):
     cart_items = relationship("CartItem", back_populates="user")
     reviews = relationship("Review", back_populates="user")
     wishlist_items = relationship("WishlistItem", back_populates="user")
+    seller_profile = relationship("Seller", back_populates="user", uselist=False)
+    notifications = relationship("Notification", back_populates="user")
 
 class Category(Base):
     __tablename__ = "categories"
@@ -44,10 +63,12 @@ class Product(Base):
     stock_quantity = Column(Integer, default=0)
     is_active = Column(Boolean, default=True)
     category_id = Column(Integer, ForeignKey("categories.id"))
+    seller_id = Column(Integer, ForeignKey("sellers.id"), nullable=True)  # Nullable for admin-added products
     created_at = Column(DateTime, server_default=func.now())
     
     # Relationships
     category = relationship("Category", back_populates="products")
+    seller = relationship("Seller", back_populates="products")
     cart_items = relationship("CartItem", back_populates="product")
     order_items = relationship("OrderItem", back_populates="product")
     reviews = relationship("Review", back_populates="product")
@@ -137,3 +158,42 @@ class WishlistItem(Base):
     # Relationships
     user = relationship("User", back_populates="wishlist_items")
     product = relationship("Product", back_populates="wishlist_items")
+
+class Seller(Base):
+    __tablename__ = "sellers"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), unique=True)
+    store_name = Column(String, nullable=False)
+    store_description = Column(Text)
+    store_logo_url = Column(String)
+    business_license = Column(String)  # Business registration number
+    gst_number = Column(String)  # GST registration for Indian businesses
+    bank_account_number = Column(String)
+    bank_ifsc_code = Column(String)
+    store_address = Column(Text)
+    is_verified = Column(Boolean, default=False)
+    is_active = Column(Boolean, default=True)
+    total_sales = Column(Float, default=0.0)
+    rating = Column(Float, default=0.0)
+    created_at = Column(DateTime, server_default=func.now())
+    
+    # Relationships
+    user = relationship("User", back_populates="seller_profile")
+    products = relationship("Product", back_populates="seller")
+
+class Notification(Base):
+    __tablename__ = "notifications"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    title = Column(String, nullable=False)
+    message = Column(Text, nullable=False)
+    notification_type = Column(Enum(NotificationType), nullable=False)
+    order_id = Column(Integer, ForeignKey("orders.id"), nullable=True)
+    is_read = Column(Boolean, default=False)
+    created_at = Column(DateTime, server_default=func.now())
+    
+    # Relationships
+    user = relationship("User", back_populates="notifications")
+    order = relationship("Order")

@@ -1,0 +1,299 @@
+{% extends "base.html" %}
+
+{% block title %}My Orders - Seller Dashboard{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-lg-3">
+            <div class="card">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-store" style="font-size: 4rem; color: #667eea;"></i>
+                    </div>
+                    <h5 id="store-name">Loading...</h5>
+                    <p class="text-muted" id="seller-email">Loading...</p>
+                    <div class="d-flex justify-content-center align-items-center mb-2">
+                        <span class="text-warning me-2">★★★★☆</span>
+                        <span id="store-rating">0.0</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="list-group mt-4">
+                <a href="/seller/dashboard" class="list-group-item list-group-item-action">
+                    <i class="fas fa-chart-pie me-2"></i>Dashboard
+                </a>
+                <a href="/seller/products" class="list-group-item list-group-item-action">
+                    <i class="fas fa-box me-2"></i>My Products
+                </a>
+                <a href="/seller/orders" class="list-group-item list-group-item-action active">
+                    <i class="fas fa-shopping-bag me-2"></i>Orders
+                </a>
+                <a href="/seller/profile" class="list-group-item list-group-item-action">
+                    <i class="fas fa-user me-2"></i>Store Profile
+                </a>
+                <a href="/" class="list-group-item list-group-item-action">
+                    <i class="fas fa-home me-2"></i>Back to Store
+                </a>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="col-lg-9">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>Orders Management</h2>
+                <div class="d-flex gap-2">
+                    <select class="form-select" id="statusFilter" style="width: auto;">
+                        <option value="">All Orders</option>
+                        <option value="pending">Pending</option>
+                        <option value="confirmed">Confirmed</option>
+                        <option value="shipped">Shipped</option>
+                        <option value="delivered">Delivered</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Orders List -->
+            <div class="card">
+                <div class="card-body">
+                    <div id="orders-container">
+                        <!-- Orders will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Order Status Update Modal -->
+<div class="modal fade" id="statusModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Update Order Status</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Update status for Order #<span id="modalOrderId"></span></p>
+                <div class="mb-3">
+                    <label for="newStatus" class="form-label">New Status</label>
+                    <select class="form-select" id="newStatus">
+                        <option value="confirmed">Confirmed</option>
+                        <option value="shipped">Shipped</option>
+                        <option value="delivered">Delivered</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="updateOrderStatus()">Update Status</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let orders = [];
+let currentOrderId = null;
+
+document.addEventListener('DOMContentLoaded', async () => {
+    if (!currentUser || currentUser.role !== 'SELLER') {
+        showAlert('Access denied. Seller role required.', 'error');
+        window.location.href = '/login';
+        return;
+    }
+    
+    await loadSellerProfile();
+    await loadOrders();
+    
+    // Add filter listener
+    document.getElementById('statusFilter').addEventListener('change', filterOrders);
+});
+
+async function loadSellerProfile() {
+    try {
+        const profile = await apiCall('/sellers/profile');
+        document.getElementById('store-name').textContent = profile.store_name;
+        document.getElementById('seller-email').textContent = profile.user.email;
+        document.getElementById('store-rating').textContent = profile.rating.toFixed(1);
+        
+        const ratingStars = Math.round(profile.rating);
+        const starsElement = document.querySelector('.text-warning');
+        starsElement.textContent = '★'.repeat(ratingStars) + '☆'.repeat(5 - ratingStars);
+    } catch (error) {
+        console.error('Failed to load seller profile:', error);
+    }
+}
+
+async function loadOrders() {
+    try {
+        orders = await apiCall('/sellers/orders');
+        displayOrders(orders);
+    } catch (error) {
+        console.error('Failed to load orders:', error);
+        document.getElementById('orders-container').innerHTML = 
+            '<div class="text-center text-muted py-4">Failed to load orders</div>';
+    }
+}
+
+function displayOrders(ordersToDisplay) {
+    const container = document.getElementById('orders-container');
+    
+    if (ordersToDisplay.length === 0) {
+        container.innerHTML = '<div class="text-center text-muted py-4">No orders found</div>';
+        return;
+    }
+    
+    container.innerHTML = ordersToDisplay.map(order => `
+        <div class="order-card border rounded p-3 mb-3">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <div>
+                            <h5 class="mb-1">Order #${order.id}</h5>
+                            <p class="text-muted mb-1">
+                                <i class="fas fa-user me-1"></i>Customer: ${order.user?.full_name || 'Unknown'}
+                            </p>
+                            <p class="text-muted mb-1">
+                                <i class="fas fa-calendar me-1"></i>${new Date(order.created_at).toLocaleDateString()}
+                            </p>
+                            <p class="text-muted mb-2">
+                                <i class="fas fa-map-marker-alt me-1"></i>${order.shipping_address}
+                            </p>
+                        </div>
+                        <div class="text-end">
+                            <h4 class="text-primary mb-1">₹${order.total_amount.toLocaleString()}</h4>
+                            <span class="badge bg-${getStatusBadgeColor(order.order_status)} fs-6">
+                                ${order.order_status.toUpperCase()}
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="order-items">
+                        <h6 class="mb-2">Items:</h6>
+                        ${order.order_items.map(item => `
+                            <div class="d-flex align-items-center mb-2 p-2 bg-light rounded">
+                                <img src="${item.product.image_url}" alt="${item.product.name}" 
+                                     class="img-thumbnail me-3" style="width: 50px; height: 50px; object-fit: cover;">
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-0">${item.product.name}</h6>
+                                    <small class="text-muted">Qty: ${item.quantity} × ₹${item.price} = ₹${(item.quantity * item.price).toLocaleString()}</small>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="d-grid gap-2">
+                        ${order.order_status === 'pending' ? `
+                            <button class="btn btn-success btn-sm" onclick="showStatusModal(${order.id}, 'confirmed')">
+                                <i class="fas fa-check me-1"></i>Confirm Order
+                            </button>
+                        ` : ''}
+                        
+                        ${order.order_status === 'confirmed' ? `
+                            <button class="btn btn-primary btn-sm" onclick="showStatusModal(${order.id}, 'shipped')">
+                                <i class="fas fa-shipping-fast me-1"></i>Mark as Shipped
+                            </button>
+                        ` : ''}
+                        
+                        ${order.order_status === 'shipped' ? `
+                            <button class="btn btn-info btn-sm" onclick="showStatusModal(${order.id}, 'delivered')">
+                                <i class="fas fa-check-circle me-1"></i>Mark as Delivered
+                            </button>
+                        ` : ''}
+                        
+                        <button class="btn btn-outline-secondary btn-sm" onclick="showStatusModal(${order.id})">
+                            <i class="fas fa-edit me-1"></i>Update Status
+                        </button>
+                    </div>
+                    
+                    <div class="mt-3 p-2 bg-light rounded">
+                        <small class="text-muted">
+                            <strong>Payment:</strong> ${order.payment_status}<br>
+                            ${order.payment_id ? `<strong>Payment ID:</strong> ${order.payment_id}` : ''}
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function filterOrders() {
+    const selectedStatus = document.getElementById('statusFilter').value;
+    
+    if (!selectedStatus) {
+        displayOrders(orders);
+        return;
+    }
+    
+    const filteredOrders = orders.filter(order => order.order_status === selectedStatus);
+    displayOrders(filteredOrders);
+}
+
+function showStatusModal(orderId, suggestedStatus = null) {
+    currentOrderId = orderId;
+    document.getElementById('modalOrderId').textContent = orderId;
+    
+    if (suggestedStatus) {
+        document.getElementById('newStatus').value = suggestedStatus;
+    }
+    
+    const modal = new bootstrap.Modal(document.getElementById('statusModal'));
+    modal.show();
+}
+
+async function updateOrderStatus() {
+    if (!currentOrderId) return;
+    
+    const newStatus = document.getElementById('newStatus').value;
+    
+    try {
+        await apiCall(`/sellers/orders/${currentOrderId}/status`, {
+            method: 'PUT',
+            body: JSON.stringify({ status: newStatus })
+        });
+        
+        showAlert('Order status updated successfully!', 'success');
+        
+        // Close modal and reload orders
+        const modal = bootstrap.Modal.getInstance(document.getElementById('statusModal'));
+        modal.hide();
+        await loadOrders();
+    } catch (error) {
+        showAlert('Failed to update order status: ' + error.message, 'error');
+    }
+}
+
+function getStatusBadgeColor(status) {
+    switch (status) {
+        case 'pending': return 'warning';
+        case 'confirmed': return 'info';
+        case 'shipped': return 'primary';
+        case 'delivered': return 'success';
+        case 'cancelled': return 'danger';
+        default: return 'secondary';
+    }
+}
+</script>
+
+<style>
+.order-card {
+    transition: all 0.2s ease;
+}
+
+.order-card:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.order-items {
+    max-height: 300px;
+    overflow-y: auto;
+}
+</style>
+{% endblock %}
