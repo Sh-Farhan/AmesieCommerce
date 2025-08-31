@@ -67,10 +67,7 @@ document.getElementById('seller-login-form').addEventListener('submit', async (e
     try {
         await login(email, password);
         
-        // Redirect to seller dashboard after successful login
-        if (currentUser && currentUser.role === 'SELLER') {
-            window.location.href = '/seller/dashboard';
-        }
+        // The login function already handles redirection
     } catch (error) {
         console.error('Seller login failed:', error);
     }
