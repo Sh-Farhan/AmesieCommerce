@@ -2,19 +2,24 @@ from datetime import timedelta
 from fastapi import APIRouter, Depends, HTTPException, status, Form
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
+import logging
 
 from database import get_db
 import models
 import schemas
 from auth import authenticate_user, create_access_token, get_password_hash, get_current_user, ACCESS_TOKEN_EXPIRE_MINUTES
+from logging_config import get_logger
 
 router = APIRouter()
+auth_logger = get_logger('auth')
 
 @router.post("/register", response_model=schemas.User)
 def register_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
+    auth_logger.info(f"New user registration attempt: {user.email}")
     # Check if user already exists
     db_user = db.query(models.User).filter(models.User.email == user.email).first()
     if db_user:
+        auth_logger.warning(f"Registration failed - email already exists: {user.email}")
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Email already registered"
@@ -32,6 +37,7 @@ def register_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
+    auth_logger.info(f"User registered successfully: {user.email}")
     return db_user
 
 @router.post("/register/seller")
@@ -117,8 +123,10 @@ def register_admin(user: schemas.UserCreate, db: Session = Depends(get_db)):
 
 @router.post("/login", response_model=schemas.Token)
 def login_user(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+    auth_logger.info(f"Login attempt for user: {form_data.username}")
     user = authenticate_user(form_data.username, form_data.password, db)
     if not user:
+        auth_logger.warning(f"Failed login attempt for user: {form_data.username}")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password",
@@ -128,8 +136,10 @@ def login_user(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = D
     access_token = create_access_token(
         data={"sub": user.email}, expires_delta=access_token_expires
     )
+    auth_logger.info(f"Successful login for user: {user.email} (Role: {user.role.value})")
     return {"access_token": access_token, "token_type": "bearer"}
 
 @router.get("/me", response_model=schemas.User)
 def read_users_me(current_user: models.User = Depends(get_current_user)):
+    auth_logger.info(f"User profile accessed: {current_user.email}")
     return current_user

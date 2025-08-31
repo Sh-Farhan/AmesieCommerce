@@ -4,13 +4,16 @@ from sqlalchemy.orm import Session
 import os
 import uuid
 from datetime import datetime
+import logging
 
 from database import get_db
 import models
 import schemas
 from auth import get_current_user
+from logging_config import get_logger
 
 router = APIRouter()
+seller_logger = get_logger('seller')
 
 # Allowed image extensions
 ALLOWED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".gif", ".webp"}
@@ -58,6 +61,7 @@ async def save_upload_file(file: UploadFile, upload_type: str = "profile_picture
 def get_current_seller(current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
     """Ensure current user is a seller and return their seller profile"""
     if current_user.role != models.UserRole.SELLER:
+        seller_logger.warning(f"Non-seller user attempted to access seller resource: {current_user.email} (Role: {current_user.role.value})")
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Access denied. Seller role required."
@@ -65,16 +69,19 @@ def get_current_seller(current_user: models.User = Depends(get_current_user), db
     
     seller = db.query(models.Seller).filter(models.Seller.user_id == current_user.id).first()
     if not seller:
+        seller_logger.error(f"Seller profile not found for user: {current_user.email}")
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Seller profile not found"
         )
     
+    seller_logger.info(f"Seller access granted: {current_user.email} (Store: {seller.store_name})")
     return seller
 
 @router.get("/profile", response_model=schemas.Seller)
 def get_seller_profile(seller: models.Seller = Depends(get_current_seller)):
     """Get current seller's profile"""
+    seller_logger.info(f"Profile accessed by seller: {seller.store_name}")
     return seller
 
 @router.put("/profile", response_model=schemas.Seller)
@@ -84,6 +91,7 @@ def update_seller_profile(
     db: Session = Depends(get_db)
 ):
     """Update seller profile"""
+    seller_logger.info(f"Profile update initiated by seller: {seller.store_name}")
     update_data = seller_update.dict(exclude_unset=True)
     
     for field, value in update_data.items():
@@ -91,6 +99,7 @@ def update_seller_profile(
     
     db.commit()
     db.refresh(seller)
+    seller_logger.info(f"Profile updated successfully for seller: {seller.store_name}")
     return seller
 
 @router.get("/products", response_model=List[schemas.Product])

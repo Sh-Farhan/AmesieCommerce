@@ -1,4 +1,5 @@
 import os
+import time
 from fastapi import FastAPI, Request, Depends, HTTPException, status
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -6,15 +7,38 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 import uvicorn
 from sqlalchemy.orm import Session
+import logging
 
 from database import engine, SessionLocal, Base
 from routers import auth, products, cart, orders, users, sellers
 import models
+from logging_config import setup_logging, get_logger
+
+# Setup logging
+setup_logging()
+logger = get_logger('main')
+logger.info("Starting Shopease E-commerce Platform")
 
 # Create database tables
 models.Base.metadata.create_all(bind=engine)
+logger.info("Database tables created/verified")
 
 app = FastAPI(title="Shopease E-commerce Platform", version="1.0.0")
+
+# Add request logging middleware
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    start_time = time.time()
+    response = await call_next(request)
+    process_time = time.time() - start_time
+    
+    logger.info(
+        f"{request.method} {request.url.path} - "
+        f"Status: {response.status_code} - "
+        f"Time: {process_time:.3f}s - "
+        f"Client: {request.client.host}"
+    )
+    return response
 
 # Mount static files
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -41,6 +65,7 @@ def get_db():
 # Frontend routes
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
+    logger.info(f"Home page accessed from {request.client.host}")
     return templates.TemplateResponse("index.html", {"request": request})
 
 # Customer authentication pages
@@ -98,6 +123,7 @@ async def orders_page(request: Request):
 
 @app.get("/seller/dashboard", response_class=HTMLResponse)
 async def seller_dashboard_page(request: Request):
+    logger.info(f"Seller dashboard accessed from {request.client.host}")
     return templates.TemplateResponse("seller_dashboard.html", {"request": request})
 
 @app.get("/seller/products", response_class=HTMLResponse)
