@@ -112,5 +112,10 @@ async def seller_orders_page(request: Request):
 async def seller_profile_page(request: Request):
     return templates.TemplateResponse("seller_profile.html", {"request": request})
 
+# Admin dashboard pages
+@app.get("/admin/dashboard", response_class=HTMLResponse)
+async def admin_dashboard_page(request: Request):
+    return templates.TemplateResponse("admin_dashboard.html", {"request": request})
+
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=5000, reload=True)
