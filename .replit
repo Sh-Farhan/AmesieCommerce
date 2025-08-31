@@ -23,13 +23,13 @@ args = "FastAPI Server"
 name = "FastAPI Server"
 author = "agent"
 
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "uv sync && uv run python main.py"
-waitForPort = 5000
-
 [workflows.workflow.metadata]
 outputType = "webview"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "uv sync && uv run python backend/main.py"
+waitForPort = 5000
 
 [[ports]]
 localPort = 5000

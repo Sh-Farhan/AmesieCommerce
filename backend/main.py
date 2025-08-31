@@ -61,10 +61,13 @@ async def log_requests(request: Request, call_next):
         raise
 
 # Mount static files
-app.mount("/static", StaticFiles(directory="static"), name="static")
+static_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "frontend", "static")
+app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
 # Templates
-templates = Jinja2Templates(directory="templates")
+import os
+template_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "frontend", "templates")
+templates = Jinja2Templates(directory=template_dir)
 
 # Include routers
 app.include_router(auth.router, prefix="/api/auth", tags=["authentication"])

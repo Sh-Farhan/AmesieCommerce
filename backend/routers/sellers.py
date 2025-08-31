@@ -6,6 +6,10 @@ import uuid
 from datetime import datetime
 import logging
 
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from database import get_db
 import models
 import schemas
@@ -18,7 +22,7 @@ seller_logger = get_logger('seller')
 # Allowed image extensions
 ALLOWED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".gif", ".webp"}
 MAX_FILE_SIZE = 5 * 1024 * 1024  # 5MB
-UPLOAD_DIR = "static/uploads"
+UPLOAD_DIR = "../frontend/static/uploads"
 
 # Ensure upload directory exists
 os.makedirs(f"{UPLOAD_DIR}/profile_pictures", exist_ok=True)
