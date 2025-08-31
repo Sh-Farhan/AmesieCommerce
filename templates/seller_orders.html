@@ -100,7 +100,7 @@ let orders = [];
 let currentOrderId = null;
 
 document.addEventListener('DOMContentLoaded', async () => {
-    if (!currentUser || currentUser.role !== 'SELLER') {
+    if (!currentUser || currentUser.role.toLowerCase() !== 'seller') {
         showAlert('Access denied. Seller role required.', 'error');
         window.location.href = '/login';
         return;
