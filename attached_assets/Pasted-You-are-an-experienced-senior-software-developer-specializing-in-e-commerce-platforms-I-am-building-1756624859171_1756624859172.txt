@@ -1,0 +1,202 @@
+You are an experienced senior software developer specializing in e-commerce platforms.
+I am building a full-stack e-commerce application using FastAPI (Python) for the backend and PostgreSQL as the database.
+
+I need you to scaffold the project and implement the Seller Persona + Seller Dashboard, similar to Amazon’s Seller Central (but simplified).
+
+
+---
+
+Requirements
+
+1. Seller Persona (Profile)
+
+Each seller has:
+
+seller_id (UUID, PK)
+
+full_name
+
+email (unique, verified)
+
+phone (verified)
+
+business_name
+
+profile_picture_url
+
+address (street, city, state, country, postal_code)
+
+bank_account_details (account_holder, account_number, ifsc/swift)
+
+tax_information (PAN/GST/VAT id)
+
+rating (average buyer rating, float)
+
+created_at, updated_at (timestamps)
+
+
+Features:
+
+Seller registration & login with JWT auth.
+
+Seller can view and update their profile.
+
+Profile picture upload endpoint (store path/URL in DB).
+
+
+
+---
+
+2. Seller Dashboard – Product Management
+
+Each seller can manage their own products.
+
+Product fields:
+
+product_id (UUID, PK)
+
+seller_id (FK → Seller)
+
+title
+
+description (long description)
+
+category
+
+price (decimal)
+
+stock_quantity (integer)
+
+sku (unique string)
+
+images (list of image URLs, max 10)
+
+shipping_info (weight, dimensions, delivery options)
+
+created_at, updated_at
+
+
+Features:
+
+Add product (with up to 10 images).
+
+Update product details.
+
+Remove product (soft delete).
+
+View product list (filter/sort by category, stock, date).
+
+View product details with swipable image gallery (like Amazon).
+
+
+
+---
+
+3. Dashboard Sections
+
+Profile Section: Manage seller details.
+
+Product Directory Section:
+
+"Add New Product" form.
+
+"My Products" list (sortable/filterable).
+
+"Edit Product" form.
+
+"Delete Product" option.
+
+Product detail page with image carousel.
+
+
+
+
+---
+
+4. Technical Notes
+
+Backend: FastAPI + SQLAlchemy ORM.
+
+Database: PostgreSQL.
+
+Auth: JWT for seller sessions.
+
+Images:
+
+Upload to local/static folder for now (DB stores path/URL).
+
+Limit 10 images per product.
+
+
+Security: Sellers can only manage their own products.
+
+Frontend: For now, just JSON APIs + sample responses.
+
+
+
+---
+
+5. Deliverables
+
+1. Database models for Seller and Product.
+
+
+2. Pydantic schemas for request/response validation.
+
+
+3. FastAPI routes for:
+
+Seller (register, login, update profile, view profile).
+
+Product CRUD (create, update, delete, view, list).
+
+Image upload with limit enforcement.
+
+
+
+4. JWT authentication middleware.
+
+
+5. Example JSON responses.
+
+
+6. Project scaffold with modular structure.
+
+
+
+
+---
+
+Directory Structure
+
+Please scaffold the project with this structure:
+
+app/
+ ├── core/
+ │    ├── config.py         # DB & app settings
+ │    ├── security.py       # JWT utils
+ │
+ ├── models/
+ │    ├── seller.py         # Seller model
+ │    ├── product.py        # Product model
+ │    └── __init__.py
+ │
+ ├── schemas/
+ │    ├── seller.py         # Pydantic schemas
+ │    ├── product.py
+ │    └── auth.py
+ │
+ ├── routes/
+ │    ├── auth.py           # Register/Login
+ │    ├── seller.py         # Profile routes
+ │    ├── product.py        # Product CRUD
+ │    └── __init__.py
+ │
+ ├── db.py                  # SQLAlchemy engine & session
+ ├── main.py                # FastAPI entrypoint
+
+
+---
+
+⚡ Instruction to AI:
+Generate clean, production-ready FastAPI + SQLAlchemy + PostgreSQL code with modular structure as shown above. Implement Seller Persona and Seller Dashboard APIs as described. Include JWT authentication and proper error handling.
