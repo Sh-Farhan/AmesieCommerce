@@ -156,6 +156,12 @@
 <script>
 // Load seller dashboard data
 document.addEventListener('DOMContentLoaded', async () => {
+    // Ensure user is loaded first
+    if (!currentUser) {
+        await loadCurrentUser();
+    }
+    
+    // Check if user is a seller
     if (!currentUser || currentUser.role.toLowerCase() !== 'seller') {
         showAlert('Access denied. Seller role required.', 'error');
         window.location.href = '/login';

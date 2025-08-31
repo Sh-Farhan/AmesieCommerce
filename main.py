@@ -5,6 +5,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 from sqlalchemy.orm import Session
 import logging
@@ -25,20 +26,39 @@ logger.info("Database tables created/verified")
 
 app = FastAPI(title="Shopease E-commerce Platform", version="1.0.0")
 
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # In production, specify exact origins
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 # Add request logging middleware
 @app.middleware("http")
 async def log_requests(request: Request, call_next):
     start_time = time.time()
-    response = await call_next(request)
-    process_time = time.time() - start_time
-    
-    logger.info(
-        f"{request.method} {request.url.path} - "
-        f"Status: {response.status_code} - "
-        f"Time: {process_time:.3f}s - "
-        f"Client: {request.client.host}"
-    )
-    return response
+    try:
+        response = await call_next(request)
+        process_time = time.time() - start_time
+        
+        logger.info(
+            f"{request.method} {request.url.path} - "
+            f"Status: {response.status_code} - "
+            f"Time: {process_time:.3f}s - "
+            f"Client: {request.client.host}"
+        )
+        return response
+    except Exception as e:
+        process_time = time.time() - start_time
+        logger.error(
+            f"{request.method} {request.url.path} - "
+            f"ERROR: {str(e)} - "
+            f"Time: {process_time:.3f}s - "
+            f"Client: {request.client.host}"
+        )
+        raise
 
 # Mount static files
 app.mount("/static", StaticFiles(directory="static"), name="static")
