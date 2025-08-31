@@ -59,20 +59,51 @@ class Product(Base):
     name = Column(String, nullable=False)
     description = Column(Text)
     price = Column(Float, nullable=False)
-    image_url = Column(String)
+    sku = Column(String, unique=True, nullable=False)  # Stock Keeping Unit
+    image_url = Column(String)  # Keep for backward compatibility
     stock_quantity = Column(Integer, default=0)
+    
+    # Shipping information
+    weight = Column(Float)  # Weight in kg
+    length = Column(Float)  # Length in cm
+    width = Column(Float)   # Width in cm
+    height = Column(Float)  # Height in cm
+    shipping_info = Column(Text)  # Additional shipping details
+    
+    # Status fields
     is_active = Column(Boolean, default=True)
+    is_deleted = Column(Boolean, default=False)  # Soft delete
+    
+    # Foreign keys
     category_id = Column(Integer, ForeignKey("categories.id"))
     seller_id = Column(Integer, ForeignKey("sellers.id"), nullable=True)  # Nullable for admin-added products
+    
+    # Timestamps
     created_at = Column(DateTime, server_default=func.now())
+    updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
+    deleted_at = Column(DateTime)  # When product was deleted
     
     # Relationships
     category = relationship("Category", back_populates="products")
     seller = relationship("Seller", back_populates="products")
+    images = relationship("ProductImage", back_populates="product", cascade="all, delete-orphan")
     cart_items = relationship("CartItem", back_populates="product")
     order_items = relationship("OrderItem", back_populates="product")
     reviews = relationship("Review", back_populates="product")
     wishlist_items = relationship("WishlistItem", back_populates="product")
+
+class ProductImage(Base):
+    __tablename__ = "product_images"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    product_id = Column(Integer, ForeignKey("products.id"))
+    image_url = Column(String, nullable=False)
+    alt_text = Column(String)  # Alternative text for accessibility
+    display_order = Column(Integer, default=0)  # Order for image carousel
+    created_at = Column(DateTime, server_default=func.now())
+    
+    # Relationships
+    product = relationship("Product", back_populates="images")
 
 class Address(Base):
     __tablename__ = "addresses"
@@ -167,16 +198,35 @@ class Seller(Base):
     store_name = Column(String, nullable=False)
     store_description = Column(Text)
     store_logo_url = Column(String)
+    profile_picture_url = Column(String)  # Seller profile picture
     business_license = Column(String)  # Business registration number
-    gst_number = Column(String)  # GST registration for Indian businesses
+    
+    # Address fields
+    street_address = Column(String)
+    city = Column(String)
+    state = Column(String)
+    country = Column(String)
+    postal_code = Column(String)
+    
+    # Bank account details
+    account_holder_name = Column(String)
     bank_account_number = Column(String)
     bank_ifsc_code = Column(String)
-    store_address = Column(Text)
+    
+    # Tax information
+    gst_number = Column(String)  # GST registration for Indian businesses
+    pan_number = Column(String)  # PAN number
+    vat_number = Column(String)  # VAT number for international
+    tax_id = Column(String)  # General tax identification
+    
+    # Store details
+    store_address = Column(Text)  # Keep for backward compatibility
     is_verified = Column(Boolean, default=False)
     is_active = Column(Boolean, default=True)
     total_sales = Column(Float, default=0.0)
     rating = Column(Float, default=0.0)
     created_at = Column(DateTime, server_default=func.now())
+    updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
     
     # Relationships
     user = relationship("User", back_populates="seller_profile")

@@ -21,18 +21,27 @@ def get_products(
     limit: int = 20,
     category_id: Optional[int] = None,
     search: Optional[str] = None,
+    seller_id: Optional[int] = None,
     db: Session = Depends(get_db)
 ):
-    query = db.query(models.Product).filter(models.Product.is_active == True)
+    # Only show active, non-deleted products
+    query = db.query(models.Product).filter(
+        models.Product.is_active == True,
+        models.Product.is_deleted == False
+    )
     
     if category_id:
         query = query.filter(models.Product.category_id == category_id)
+    
+    if seller_id:
+        query = query.filter(models.Product.seller_id == seller_id)
     
     if search:
         query = query.filter(
             or_(
                 models.Product.name.ilike(f"%{search}%"),
-                models.Product.description.ilike(f"%{search}%")
+                models.Product.description.ilike(f"%{search}%"),
+                models.Product.sku.ilike(f"%{search}%")
             )
         )
     
@@ -43,7 +52,8 @@ def get_products(
 def get_product(product_id: int, db: Session = Depends(get_db)):
     product = db.query(models.Product).filter(
         models.Product.id == product_id,
-        models.Product.is_active == True
+        models.Product.is_active == True,
+        models.Product.is_deleted == False
     ).first()
     
     if not product:
@@ -53,6 +63,45 @@ def get_product(product_id: int, db: Session = Depends(get_db)):
         )
     
     return product
+
+@router.get("/sku/{sku}", response_model=schemas.Product)
+def get_product_by_sku(sku: str, db: Session = Depends(get_db)):
+    """Get product by SKU"""
+    product = db.query(models.Product).filter(
+        models.Product.sku == sku,
+        models.Product.is_active == True,
+        models.Product.is_deleted == False
+    ).first()
+    
+    if not product:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Product not found"
+        )
+    
+    return product
+
+@router.get("/{product_id}/images", response_model=List[schemas.ProductImage])
+def get_product_images(product_id: int, db: Session = Depends(get_db)):
+    """Get all images for a product"""
+    # Verify product exists and is active
+    product = db.query(models.Product).filter(
+        models.Product.id == product_id,
+        models.Product.is_active == True,
+        models.Product.is_deleted == False
+    ).first()
+    
+    if not product:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Product not found"
+        )
+    
+    images = db.query(models.ProductImage).filter(
+        models.ProductImage.product_id == product_id
+    ).order_by(models.ProductImage.display_order).all()
+    
+    return images
 
 @router.get("/{product_id}/reviews", response_model=List[schemas.Review])
 def get_product_reviews(product_id: int, db: Session = Depends(get_db)):
