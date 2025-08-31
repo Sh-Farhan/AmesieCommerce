@@ -595,14 +595,13 @@ function displayOrders(orders) {
 
 // Form handlers
 function handleLoginForm() {
-    const form = document.getElementById('login-form');
+    const form = document.getElementById('login-form') || document.getElementById('seller-login-form') || document.getElementById('admin-login-form');
     if (!form) return;
     
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const formData = new FormData(form);
-        const email = formData.get('email');
-        const password = formData.get('password');
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
         
         await login(email, password);
     });
@@ -614,17 +613,36 @@ function handleRegisterForm() {
     
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const formData = new FormData(form);
+        
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        
+        if (password !== confirmPassword) {
+            showAlert('Passwords do not match', 'error');
+            return;
+        }
         
         const userData = {
-            email: formData.get('email'),
-            password: formData.get('password'),
-            full_name: formData.get('full_name'),
-            phone_number: formData.get('phone_number'),
+            email: document.getElementById('email').value,
+            password: password,
+            full_name: document.getElementById('fullName').value,
+            phone_number: document.getElementById('phone').value,
         };
         
         await register(userData);
     });
+}
+
+function handleCustomerRegisterForm() {
+    handleRegisterForm();
+}
+
+function handleSellerRegisterForm() {
+    // Seller registration is handled inline in the template
+}
+
+function handleAdminRegisterForm() {
+    // Admin registration is handled inline in the template
 }
 
 function handleCheckoutForm() {
@@ -669,9 +687,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             handleLoginForm();
             break;
         case '/customer/register':
+            handleCustomerRegisterForm();
+            break;
         case '/seller/register':
+            handleSellerRegisterForm();
+            break;
         case '/admin/register':
-            handleRegisterForm();
+            handleAdminRegisterForm();
             break;
         case '/checkout':
             await loadCart();
