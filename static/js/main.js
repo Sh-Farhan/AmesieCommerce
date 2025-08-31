@@ -92,19 +92,12 @@ async function login(email, password) {
         await loadCurrentUser();
         showAlert('Login successful!', 'success');
         
-        // Debug: Log user role
-        console.log('User role:', currentUser.role);
-        console.log('User role lowercase:', currentUser.role.toLowerCase());
-        
         // Redirect based on user role
         if (currentUser && currentUser.role && currentUser.role.toLowerCase() === 'seller') {
-            console.log('Redirecting to seller dashboard');
             window.location.href = '/seller/dashboard';
         } else if (currentUser && currentUser.role && currentUser.role.toLowerCase() === 'admin') {
-            console.log('Redirecting to admin dashboard');
             window.location.href = '/admin/dashboard';
         } else {
-            console.log('Redirecting to home');
             window.location.href = '/';
         }
         

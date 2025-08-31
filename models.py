@@ -7,9 +7,9 @@ from database import Base
 
 # User roles enum
 class UserRole(str, enum.Enum):
-    ADMIN = "admin"
-    SELLER = "seller"
-    CUSTOMER = "customer"
+    ADMIN = "ADMIN"
+    SELLER = "SELLER"
+    CUSTOMER = "CUSTOMER"
 
 # Notification types enum
 class NotificationType(str, enum.Enum):
