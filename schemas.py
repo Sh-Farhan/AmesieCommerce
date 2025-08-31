@@ -5,9 +5,9 @@ from enum import Enum
 
 # Enums
 class UserRole(str, Enum):
-    ADMIN = "admin"
-    SELLER = "seller"
-    CUSTOMER = "customer"
+    ADMIN = "ADMIN"
+    SELLER = "SELLER"
+    CUSTOMER = "CUSTOMER"
 
 class NotificationType(str, Enum):
     ORDER_PLACED = "order_placed"
