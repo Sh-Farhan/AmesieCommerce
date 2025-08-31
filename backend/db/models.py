@@ -3,7 +3,11 @@ import enum
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
-from database import Base
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from core.database import Base
 
 # User roles enum
 class UserRole(str, enum.Enum):

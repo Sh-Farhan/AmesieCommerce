@@ -10,11 +10,11 @@ import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from database import get_db
-import models
-import schemas
-from auth import get_current_user
-from logging_config import get_logger
+from core.database import get_db
+from db import models
+from schemas import schemas
+from services.auth import get_current_user
+from core.logging_config import get_logger
 
 router = APIRouter()
 seller_logger = get_logger('seller')

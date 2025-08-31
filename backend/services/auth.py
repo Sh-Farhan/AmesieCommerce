@@ -7,8 +7,12 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy.orm import Session
 
-from database import get_db
-import models
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from core.database import get_db
+from db import models
 
 # Security settings
 SECRET_KEY = os.getenv("SECRET_KEY", "your-secret-key-here")

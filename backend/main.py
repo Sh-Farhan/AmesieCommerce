@@ -10,10 +10,10 @@ import uvicorn
 from sqlalchemy.orm import Session
 import logging
 
-from database import engine, SessionLocal, Base
+from core.database import engine, SessionLocal, Base
 from routers import auth, products, cart, orders, users, sellers
-import models
-from logging_config import setup_logging, get_logger
+from db import models
+from core.logging_config import setup_logging, get_logger
 
 # Setup logging
 setup_logging()

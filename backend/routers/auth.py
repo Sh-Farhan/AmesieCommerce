@@ -8,11 +8,11 @@ import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from database import get_db
-import models
-import schemas
-from auth import authenticate_user, create_access_token, get_password_hash, get_current_user, ACCESS_TOKEN_EXPIRE_MINUTES
-from logging_config import get_logger
+from core.database import get_db
+from db import models
+from schemas import schemas
+from services.auth import authenticate_user, create_access_token, get_password_hash, get_current_user, ACCESS_TOKEN_EXPIRE_MINUTES
+from core.logging_config import get_logger
 
 router = APIRouter()
 auth_logger = get_logger('auth')
