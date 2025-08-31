@@ -162,7 +162,7 @@
 <script>
 // Load admin dashboard data
 document.addEventListener('DOMContentLoaded', async () => {
-    if (!currentUser || currentUser.role !== 'ADMIN') {
+    if (!currentUser || currentUser.role !== 'admin') {
         showAlert('Access denied. Admin role required.', 'error');
         window.location.href = '/login';
         return;

@@ -93,9 +93,9 @@ async function login(email, password) {
         showAlert('Login successful!', 'success');
         
         // Redirect based on user role
-        if (currentUser.role === 'SELLER') {
+        if (currentUser.role === 'seller') {
             window.location.href = '/seller/dashboard';
-        } else if (currentUser.role === 'ADMIN') {
+        } else if (currentUser.role === 'admin') {
             window.location.href = '/admin/dashboard';
         } else {
             window.location.href = '/';
@@ -180,11 +180,11 @@ function updateNavigation() {
         adminMenuItems.forEach(item => item.style.display = 'none');
         
         // Show appropriate menu based on user role
-        if (currentUser.role === 'CUSTOMER') {
+        if (currentUser.role === 'customer') {
             customerMenuItems.forEach(item => item.style.display = 'block');
-        } else if (currentUser.role === 'SELLER') {
+        } else if (currentUser.role === 'seller') {
             sellerMenuItems.forEach(item => item.style.display = 'block');
-        } else if (currentUser.role === 'ADMIN') {
+        } else if (currentUser.role === 'admin') {
             adminMenuItems.forEach(item => item.style.display = 'block');
             // Admins can also see customer features
             customerMenuItems.forEach(item => item.style.display = 'block');

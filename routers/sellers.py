@@ -11,7 +11,7 @@ router = APIRouter()
 
 def get_current_seller(current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
     """Ensure current user is a seller and return their seller profile"""
-    if current_user.role.value != "SELLER":
+    if current_user.role.value != "seller":
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Access denied. Seller role required."
