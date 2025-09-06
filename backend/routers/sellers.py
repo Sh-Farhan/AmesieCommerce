@@ -7,7 +7,7 @@ from datetime import datetime
 import logging
 
 import sys
-import os
+# import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from core.database import get_db
@@ -64,7 +64,8 @@ async def save_upload_file(file: UploadFile, upload_type: str = "profile_picture
 
 def get_current_seller(current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
     """Ensure current user is a seller and return their seller profile"""
-    if current_user.role != models.UserRole.SELLER:
+    # if current_user.role != models.UserRole.SELLER:
+    if current_user.role.value != models.UserRole.SELLER.value:
         seller_logger.warning(f"Non-seller user attempted to access seller resource: {current_user.email} (Role: {current_user.role.value})")
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
