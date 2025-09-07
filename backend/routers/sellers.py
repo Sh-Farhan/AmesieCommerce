@@ -399,6 +399,12 @@ def get_seller_dashboard_stats(
         "store_rating": seller.rating
     }
 
+# Add missing API endpoints that the frontend expects
+@router.get("/me/dashboard-stats")
+def get_my_dashboard_stats(seller: models.Seller = Depends(get_current_seller), db: Session = Depends(get_db)):
+    """Get dashboard stats for current seller (alternative endpoint for frontend)"""
+    return get_seller_dashboard_stats(seller, db)
+
 @router.post("/upload-profile-picture", response_model=schemas.ImageUploadResponse)
 async def upload_profile_picture(
     file: UploadFile = File(...),
