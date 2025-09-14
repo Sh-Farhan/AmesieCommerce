@@ -1,0 +1,461 @@
+Convert the frontend(not frontend1) into react(typescript, tsx).
+Also in the seller dashboard the apis are not perfect, they are returning html/css content instead of proper json, make frontend for that as well if you haven't made any. 
+For the reference 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Products - Seller Dashboard</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/style.css">
+    
+    
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-shopping-bag me-2"></i>Shopease
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/products">Products</a>
+                    </li>
+                </ul>
+                
+                <ul class="navbar-nav">
+                    <li class="nav-item" id="cart-link" style="display: none;">
+                        <a class="nav-link" href="/cart">
+                            <i class="fas fa-shopping-cart me-1"></i>Cart
+                            <span class="badge bg-light text-dark ms-1" id="cart-count" style="display: none;">0</span>
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown" id="userDropdown" style="display: none;">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user"></i> <span id="userName"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <!-- Customer menu items -->
+                            <li class="customer-menu"><a class="dropdown-item" href="/profile"><i class="fas fa-user-circle me-2"></i>Profile</a></li>
+                            <li class="customer-menu"><a class="dropdown-item" href="/orders"><i class="fas fa-shopping-bag me-2"></i>My Orders</a></li>
+                            <li class="customer-menu"><a class="dropdown-item" href="/wishlist"><i class="fas fa-heart me-2"></i>Wishlist</a></li>
+                            
+                            <!-- Seller menu items -->
+                            <li class="seller-menu" style="display: none;"><a class="dropdown-item" href="/seller/dashboard"><i class="fas fa-chart-pie me-2"></i>Seller Dashboard</a></li>
+                            <li class="seller-menu" style="display: none;"><a class="dropdown-item" href="/seller/products"><i class="fas fa-box me-2"></i>My Products</a></li>
+                            <li class="seller-menu" style="display: none;"><a class="dropdown-item" href="/seller/orders"><i class="fas fa-shopping-cart me-2"></i>Manage Orders</a></li>
+                            <li class="seller-menu" style="display: none;"><a class="dropdown-item" href="/seller/profile"><i class="fas fa-store me-2"></i>Store Profile</a></li>
+                            <li class="seller-menu" style="display: none;"><hr class="dropdown-divider"></li>
+                            <li class="seller-menu" style="display: none;"><a class="dropdown-item" href="/profile"><i class="fas fa-user-circle me-2"></i>Account Settings</a></li>
+                            
+                            <!-- Admin menu items -->
+                            <li class="admin-menu" style="display: none;"><a class="dropdown-item" href="/admin/dashboard"><i class="fas fa-tachometer-alt me-2"></i>Admin Dashboard</a></li>
+                            <li class="admin-menu" style="display: none;"><a class="dropdown-item" href="/admin/users"><i class="fas fa-users me-2"></i>Manage Users</a></li>
+                            <li class="admin-menu" style="display: none;"><a class="dropdown-item" href="/admin/sellers"><i class="fas fa-store me-2"></i>Manage Sellers</a></li>
+                            
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" onclick="logout()"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown" id="auth-dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-sign-in-alt me-1"></i>Login / Register
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><h6 class="dropdown-header">Customer</h6></li>
+                            <li><a class="dropdown-item" href="/customer/login"><i class="fas fa-sign-in-alt me-2"></i>Customer Login</a></li>
+                            <li><a class="dropdown-item" href="/customer/register"><i class="fas fa-user-plus me-2"></i>Customer Register</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><h6 class="dropdown-header">Seller</h6></li>
+                            <li><a class="dropdown-item" href="/seller/login"><i class="fas fa-store me-2"></i>Seller Login</a></li>
+                            <li><a class="dropdown-item" href="/seller/register"><i class="fas fa-store me-2"></i>Become a Seller</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><h6 class="dropdown-header">Admin</h6></li>
+                            <li><a class="dropdown-item" href="/admin/login"><i class="fas fa-shield-alt me-2"></i>Admin Login</a></li>
+                            <li><a class="dropdown-item" href="/admin/register"><i class="fas fa-shield-alt me-2"></i>Admin Register</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item" id="logout-link" style="display: none;">
+                        <button class="nav-link btn btn-link text-white" onclick="logout()">
+                            <i class="fas fa-sign-out-alt me-1"></i>Logout
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        
+<div class="container py-5">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-lg-3">
+            <div class="card">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-store" style="font-size: 4rem; color: #667eea;"></i>
+                    </div>
+                    <h5 id="store-name">Loading...</h5>
+                    <p class="text-muted" id="seller-email">Loading...</p>
+                    <div class="d-flex justify-content-center align-items-center mb-2">
+                        <span class="text-warning me-2">★★★★☆</span>
+                        <span id="store-rating">0.0</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="list-group mt-4">
+                <a href="/seller/dashboard" class="list-group-item list-group-item-action">
+                    <i class="fas fa-chart-pie me-2"></i>Dashboard
+                </a>
+                <a href="/seller/products" class="list-group-item list-group-item-action active">
+                    <i class="fas fa-box me-2"></i>My Products
+                </a>
+                <a href="/seller/orders" class="list-group-item list-group-item-action">
+                    <i class="fas fa-shopping-bag me-2"></i>Orders
+                </a>
+                <a href="/seller/profile" class="list-group-item list-group-item-action">
+                    <i class="fas fa-user me-2"></i>Store Profile
+                </a>
+                <a href="/" class="list-group-item list-group-item-action">
+                    <i class="fas fa-home me-2"></i>Back to Store
+                </a>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="col-lg-9">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>My Products</h2>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProductModal">
+                    <i class="fas fa-plus me-2"></i>Add New Product
+                </button>
+            </div>
+            
+            <!-- Products Table -->
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Category</th>
+                                    <th>Price</th>
+                                    <th>Stock</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="products-tbody">
+                                <!-- Products will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Product Modal -->
+<div class="modal fade" id="addProductModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add New Product</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="productForm">
+                    <input type="hidden" id="productId">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="productName" class="form-label">Product Name</label>
+                                <input type="text" class="form-control" id="productName" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="productCategory" class="form-label">Category</label>
+                                <select class="form-select" id="productCategory" required>
+                                    <!-- Categories will be loaded here -->
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="productDescription" class="form-label">Description</label>
+                        <textarea class="form-control" id="productDescription" rows="3" required></textarea>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="productPrice" class="form-label">Price (₹)</label>
+                                <input type="number" class="form-control" id="productPrice" min="0" step="0.01" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="productStock" class="form-label">Stock Quantity</label>
+                                <input type="number" class="form-control" id="productStock" min="0" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="productImage" class="form-label">Image URL</label>
+                        <input type="url" class="form-control" id="productImage" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="saveProduct()">Save Product</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let categories = [];
+
+document.addEventListener('DOMContentLoaded', async () => {
+    if (!currentUser || currentUser.role.toLowerCase() !== 'seller') {
+        showAlert('Access denied. Seller role required.', 'error');
+        window.location.href = '/login';
+        return;
+    }
+    
+    await loadSellerProfile();
+    await loadCategories();
+    await loadProducts();
+});
+
+async function loadSellerProfile() {
+    try {
+        const profile = await apiCall('/sellers/profile');
+        document.getElementById('store-name').textContent = profile.store_name;
+        document.getElementById('seller-email').textContent = profile.user.email;
+        document.getElementById('store-rating').textContent = profile.rating.toFixed(1);
+        
+        const ratingStars = Math.round(profile.rating);
+        const starsElement = document.querySelector('.text-warning');
+        starsElement.textContent = '★'.repeat(ratingStars) + '☆'.repeat(5 - ratingStars);
+    } catch (error) {
+        console.error('Failed to load seller profile:', error);
+    }
+}
+
+async function loadCategories() {
+    try {
+        categories = await apiCall('/products/categories');
+        const select = document.getElementById('productCategory');
+        select.innerHTML = '<option value="">Select Category</option>' +
+            categories.map(cat => `<option value="${cat.id}">${cat.name}</option>`).join('');
+    } catch (error) {
+        console.error('Failed to load categories:', error);
+    }
+}
+
+async function loadProducts() {
+    try {
+        const products = await apiCall('/sellers/products');
+        const tbody = document.getElementById('products-tbody');
+        
+        if (products.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">No products yet. Add your first product!</td></tr>';
+            return;
+        }
+        
+        tbody.innerHTML = products.map(product => `
+            <tr>
+                <td>
+                    <div class="d-flex align-items-center">
+                        <img src="${product.image_url}" alt="${product.name}" class="img-thumbnail me-3" style="width: 50px; height: 50px; object-fit: cover;">
+                        <div>
+                            <h6 class="mb-0">${product.name}</h6>
+                            <small class="text-muted">${product.description.substring(0, 50)}...</small>
+                        </div>
+                    </div>
+                </td>
+                <td>${product.category.name}</td>
+                <td>₹${product.price.toLocaleString()}</td>
+                <td>
+                    <span class="badge bg-${product.stock_quantity < 10 ? 'warning' : 'success'}">
+                        ${product.stock_quantity}
+                    </span>
+                </td>
+                <td>
+                    <span class="badge bg-${product.stock_quantity > 0 ? 'success' : 'danger'}">
+                        ${product.stock_quantity > 0 ? 'In Stock' : 'Out of Stock'}
+                    </span>
+                </td>
+                <td>
+                    <button class="btn btn-sm btn-outline-primary me-1" onclick="editProduct(${product.id})" title="Edit">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger" onclick="deleteProduct(${product.id})" title="Delete">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </td>
+            </tr>
+        `).join('');
+    } catch (error) {
+        console.error('Failed to load products:', error);
+    }
+}
+
+async function saveProduct() {
+    const form = document.getElementById('productForm');
+    const productId = document.getElementById('productId').value;
+    
+    const productData = {
+        name: document.getElementById('productName').value,
+        description: document.getElementById('productDescription').value,
+        price: parseFloat(document.getElementById('productPrice').value),
+        image_url: document.getElementById('productImage').value,
+        stock_quantity: parseInt(document.getElementById('productStock').value),
+        category_id: parseInt(document.getElementById('productCategory').value)
+    };
+    
+    try {
+        if (productId) {
+            // Update existing product
+            await apiCall(`/sellers/products/${productId}`, {
+                method: 'PUT',
+                body: JSON.stringify(productData)
+            });
+            showAlert('Product updated successfully!', 'success');
+        } else {
+            // Create new product
+            await apiCall('/sellers/products', {
+                method: 'POST',
+                body: JSON.stringify(productData)
+            });
+            showAlert('Product added successfully!', 'success');
+        }
+        
+        // Close modal and reload products
+        const modal = bootstrap.Modal.getInstance(document.getElementById('addProductModal'));
+        modal.hide();
+        form.reset();
+        document.getElementById('productId').value = '';
+        await loadProducts();
+    } catch (error) {
+        showAlert('Failed to save product: ' + error.message, 'error');
+    }
+}
+
+async function editProduct(productId) {
+    try {
+        const products = await apiCall('/sellers/products');
+        const product = products.find(p => p.id === productId);
+        
+        if (!product) {
+            showAlert('Product not found', 'error');
+            return;
+        }
+        
+        // Fill form with product data
+        document.getElementById('productId').value = product.id;
+        document.getElementById('productName').value = product.name;
+        document.getElementById('productDescription').value = product.description;
+        document.getElementById('productPrice').value = product.price;
+        document.getElementById('productImage').value = product.image_url;
+        document.getElementById('productStock').value = product.stock_quantity;
+        document.getElementById('productCategory').value = product.category_id;
+        
+        // Show modal
+        const modal = new bootstrap.Modal(document.getElementById('addProductModal'));
+        modal.show();
+    } catch (error) {
+        showAlert('Failed to load product details', 'error');
+    }
+}
+
+async function deleteProduct(productId) {
+    if (!confirm('Are you sure you want to delete this product?')) {
+        return;
+    }
+    
+    try {
+        await apiCall(`/sellers/products/${productId}`, {
+            method: 'DELETE'
+        });
+        showAlert('Product deleted successfully!', 'success');
+        await loadProducts();
+    } catch (error) {
+        showAlert('Failed to delete product: ' + error.message, 'error');
+    }
+}
+</script>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-5 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5><i class="fas fa-shopping-bag me-2"></i>Shopease</h5>
+                    <p>Your ultimate shopping destination for quality products at amazing prices.</p>
+                </div>
+                <div class="col-md-4">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="/" class="text-white-50">Home</a></li>
+                        <li><a href="/products" class="text-white-50">Products</a></li>
+                        <li><a href="/cart" class="text-white-50">Cart</a></li>
+                        <li><a href="/orders" class="text-white-50">Orders</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>Contact Info</h5>
+                    <p class="text-white-50">
+                        <i class="fas fa-envelope me-2"></i>support@shopease.com<br>
+                        <i class="fas fa-phone me-2"></i>+91 12345 67890
+                    </p>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="text-center">
+                <p>&copy; 2024 Shopease. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Razorpay -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <!-- Custom JS -->
+    <script src="/static/js/main.js"></script>
+    
+    
+</body>
+</html>
+This is what seller/orders is returning its doing same for my products, orders,store profile etc. Please fix this
