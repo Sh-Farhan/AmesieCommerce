@@ -1,29 +1,66 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import path from 'path'
+// import { defineConfig } from 'vite'
+// import react from '@vitejs/plugin-react'
+// import path from 'path'
+
+// // https://vitejs.dev/config/
+// export default defineConfig({
+//   plugins: [react()],
+//   resolve: {
+//     alias: {
+//       '@': path.resolve(__dirname, './src'),
+//     },
+//   },
+//   server: {
+//     host: '0.0.0.0',
+//     port: 5000,
+//     proxy: {
+//       '/api': {
+//         target: 'http://localhost:8000',
+//         changeOrigin: true,
+//         secure: false,
+//       },
+//       '/static': {
+//         target: 'http://localhost:8000',
+//         changeOrigin: true,
+//         secure: false,
+//       },
+//     },
+//   },
+// })
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import path from "path";
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
+      "@": path.resolve(__dirname, "./src"),
     },
   },
   server: {
-    host: '0.0.0.0',
+    host: "0.0.0.0",
     port: 5000,
+    
+    allowedHosts: [
+      "0752ae74-a63c-406b-96e0-4831afb103cc-00-1ehvndnsfj5hk.janeway.replit.dev",
+    ],
+    hmr: {
+      clientPort: 443,
+    },
+
     proxy: {
-      '/api': {
-        target: 'http://localhost:8000',
+      "/api": {
+        target: "http://localhost:8000",
         changeOrigin: true,
         secure: false,
       },
-      '/static': {
-        target: 'http://localhost:8000',
+      "/static": {
+        target: "http://localhost:8000",
         changeOrigin: true,
         secure: false,
       },
     },
   },
-})
+});

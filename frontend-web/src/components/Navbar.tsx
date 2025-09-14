@@ -74,10 +74,19 @@ const Navbar: React.FC = () => {
                 </li>
               </>
             ) : (
-              <li className="nav-item">
-                <Link className="nav-link" to="/login">
-                  <i className="fas fa-sign-in-alt me-1"></i>Login
-                </Link>
+              <li className="nav-item dropdown">
+                <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                  <i className="fas fa-sign-in-alt me-1"></i>Login / Register
+                </a>
+                <ul className="dropdown-menu">
+                  <li><h6 className="dropdown-header">Customer</h6></li>
+                  <li><Link className="dropdown-item" to="/customer/login"><i className="fas fa-sign-in-alt me-2"></i>Customer Login</Link></li>
+                  <li><Link className="dropdown-item" to="/customer/register"><i className="fas fa-user-plus me-2"></i>Customer Register</Link></li>
+                  <li><hr className="dropdown-divider" /></li>
+                  <li><h6 className="dropdown-header">Seller</h6></li>
+                  <li><Link className="dropdown-item" to="/seller/login"><i className="fas fa-store me-2"></i>Seller Login</Link></li>
+                  <li><Link className="dropdown-item" to="/seller/register"><i className="fas fa-store me-2"></i>Become a Seller</Link></li>
+                </ul>
               </li>
             )}
           </ul>

@@ -3,7 +3,10 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import MainLayout from '@/layouts/MainLayout'
 import SellerLayout from '@/layouts/SellerLayout'
 import ProtectedRoute from '@/components/ProtectedRoute'
-import LoginPage from '@/features/auth/LoginPage'
+import CustomerLoginPage from '@/features/auth/CustomerLoginPage'
+import SellerLoginPage from '@/features/auth/SellerLoginPage'
+import CustomerRegisterPage from '@/features/auth/CustomerRegisterPage'
+import SellerRegisterPage from '@/features/auth/SellerRegisterPage'
 import HomePage from '@/features/catalog/HomePage'
 import SellerDashboard from '@/features/seller/DashboardPage'
 import SellerProducts from '@/features/seller/ProductsPage'
@@ -13,8 +16,14 @@ import SellerProfile from '@/features/seller/ProfilePage'
 const AppRoutes: React.FC = () => {
   return (
     <Routes>
-      {/* Public routes */}
-      <Route path="/login" element={<LoginPage />} />
+      {/* Authentication routes */}
+      <Route path="/customer/login" element={<CustomerLoginPage />} />
+      <Route path="/seller/login" element={<SellerLoginPage />} />
+      <Route path="/customer/register" element={<CustomerRegisterPage />} />
+      <Route path="/seller/register" element={<SellerRegisterPage />} />
+      
+      {/* Legacy login redirect */}
+      <Route path="/login" element={<Navigate to="/customer/login" replace />} />
       
       {/* Main application routes */}
       <Route path="/" element={<MainLayout />}>
