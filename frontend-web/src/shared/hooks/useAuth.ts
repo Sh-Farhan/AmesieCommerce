@@ -4,7 +4,7 @@
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { authService, setAuthToken, clearAuthToken, getAuthToken } from '../api'
-import type { User, LoginCredentials, UserCreate, SellerRegistration } from '../api/types'
+import type { LoginCredentials, UserCreate, SellerRegistration } from '../api/types'
 
 // Query keys
 export const authKeys = {

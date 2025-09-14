@@ -4,7 +4,7 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { cartService } from '../api'
-import type { CartItem, CartItemCreate, WishlistItem } from '../api/types'
+import type { CartItemCreate } from '../api/types'
 import { useIsAuthenticated } from './useAuth'
 
 // Query keys

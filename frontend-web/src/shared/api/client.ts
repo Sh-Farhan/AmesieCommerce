@@ -5,13 +5,18 @@
 
 // Get the backend URL from environment
 const getBackendUrl = () => {
-  // In development, use the Replit backend domain
-  if (import.meta.env.DEV) {
-    return `https://${window.location.hostname.replace(/^[^-]+-[^-]+-[^-]+-[^-]+-/, '').replace(/\.[\w-]+\.replit\.dev.*/, '')}.janeway.replit.dev`
+  // Check for explicit environment variable first
+  if (import.meta.env.VITE_API_URL) {
+    return import.meta.env.VITE_API_URL
   }
   
-  // In production, use relative URLs or configured backend URL
-  return import.meta.env.VITE_API_URL || '/api'
+  // In development, use empty string to leverage Vite proxy
+  if (import.meta.env.DEV) {
+    return ''
+  }
+  
+  // In production, use relative URLs
+  return '/api'
 }
 
 export const API_BASE_URL = getBackendUrl()

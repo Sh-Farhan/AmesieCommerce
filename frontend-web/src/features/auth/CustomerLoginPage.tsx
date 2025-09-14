@@ -1,13 +1,12 @@
 import React, { useState } from 'react'
 import { useNavigate, useLocation, Link } from 'react-router-dom'
-import { useAuth } from './AuthProvider'
+import { useLogin } from '../../shared/hooks/useAuth'
 
 const CustomerLoginPage: React.FC = () => {
   const [credentials, setCredentials] = useState({ email: '', password: '', rememberMe: false })
-  const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
   
-  const { login } = useAuth()
+  const loginMutation = useLogin()
   const navigate = useNavigate()
   const location = useLocation()
   
@@ -15,112 +14,107 @@ const CustomerLoginPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setIsLoading(true)
     setError('')
 
     try {
-      await login({ username: credentials.email, password: credentials.password })
+      await loginMutation.mutateAsync({ 
+        username: credentials.email, 
+        password: credentials.password 
+      })
       navigate(from, { replace: true })
     } catch (err: any) {
-      setError(err.response?.data?.detail || 'Login failed. Please try again.')
-    } finally {
-      setIsLoading(false)
+      setError(err.message || 'Login failed. Please try again.')
     }
   }
 
   return (
-    <div className="min-vh-100 d-flex align-items-center justify-content-center bg-light">
-      <div className="container">
-        <div className="row justify-content-center">
-          <div className="col-md-5">
-            <div className="card shadow">
-              <div className="card-body">
-                <div className="text-center mb-4">
-                  <i className="fas fa-shopping-cart text-primary" style={{ fontSize: '3rem' }}></i>
-                  <h2 className="mt-3">Customer Login</h2>
-                  <p className="text-muted">Sign in to continue shopping</p>
-                </div>
+    <div className="min-h-screen flex items-center justify-center bg-neutral-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8">
+        <div className="text-center">
+          <h2 className="text-3xl font-bold text-gradient">Customer Login</h2>
+          <p className="mt-2 text-neutral-600">Sign in to your account</p>
+        </div>
 
-                {error && (
-                  <div className="alert alert-danger" role="alert">
-                    <i className="fas fa-exclamation-circle me-2"></i>
-                    {error}
-                  </div>
-                )}
+        <div className="card-elevated p-8">
+          {error && (
+            <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg">
+              {error}
+            </div>
+          )}
 
-                <form onSubmit={handleSubmit}>
-                  <div className="mb-3">
-                    <label htmlFor="email" className="form-label">
-                      <i className="fas fa-envelope me-2"></i>Email Address
-                    </label>
-                    <input
-                      type="email"
-                      className="form-control"
-                      id="email"
-                      value={credentials.email}
-                      onChange={(e) => setCredentials({ ...credentials, email: e.target.value })}
-                      required
-                      disabled={isLoading}
-                    />
-                  </div>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-neutral-700 mb-2">
+                Email Address
+              </label>
+              <input
+                type="email"
+                id="email"
+                className="input-field"
+                value={credentials.email}
+                onChange={(e) => setCredentials({ ...credentials, email: e.target.value })}
+                required
+                disabled={loginMutation.isPending}
+                placeholder="Enter your email"
+              />
+            </div>
 
-                  <div className="mb-3">
-                    <label htmlFor="password" className="form-label">
-                      <i className="fas fa-lock me-2"></i>Password
-                    </label>
-                    <input
-                      type="password"
-                      className="form-control"
-                      id="password"
-                      value={credentials.password}
-                      onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
-                      required
-                      disabled={isLoading}
-                    />
-                  </div>
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium text-neutral-700 mb-2">
+                Password
+              </label>
+              <input
+                type="password"
+                id="password"
+                className="input-field"
+                value={credentials.password}
+                onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
+                required
+                disabled={loginMutation.isPending}
+                placeholder="Enter your password"
+              />
+            </div>
 
-                  <div className="mb-3 form-check">
-                    <input
-                      type="checkbox"
-                      className="form-check-input"
-                      id="rememberMe"
-                      checked={credentials.rememberMe}
-                      onChange={(e) => setCredentials({ ...credentials, rememberMe: e.target.checked })}
-                    />
-                    <label className="form-check-label" htmlFor="rememberMe">
-                      Remember me
-                    </label>
-                  </div>
+            <div className="flex items-center">
+              <input
+                type="checkbox"
+                id="rememberMe"
+                className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-neutral-300 rounded"
+                checked={credentials.rememberMe}
+                onChange={(e) => setCredentials({ ...credentials, rememberMe: e.target.checked })}
+              />
+              <label htmlFor="rememberMe" className="ml-2 text-sm text-neutral-700">
+                Remember me
+              </label>
+            </div>
 
-                  <div className="d-grid">
-                    <button
-                      type="submit"
-                      className="btn btn-primary btn-lg"
-                      disabled={isLoading}
-                    >
-                      {isLoading ? (
-                        <>
-                          <span className="spinner-border spinner-border-sm me-2" role="status"></span>
-                          Signing in...
-                        </>
-                      ) : (
-                        <>
-                          <i className="fas fa-sign-in-alt me-2"></i>Sign In
-                        </>
-                      )}
-                    </button>
-                  </div>
-                </form>
+            <button
+              type="submit"
+              className="btn-primary w-full"
+              disabled={loginMutation.isPending}
+            >
+              {loginMutation.isPending ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                  Signing in...
+                </>
+              ) : (
+                'Sign In'
+              )}
+            </button>
+          </form>
 
-                <div className="text-center mt-4">
-                  <p className="mb-2">Don't have an account? <Link to="/customer/register" className="text-primary">Create Account</Link></p>
-                  <div className="d-flex justify-content-center gap-3">
-                    <Link to="/seller/login" className="text-muted small">Seller Login</Link>
-                    <span className="text-muted">|</span>
-                    <Link to="/admin/login" className="text-muted small">Admin Login</Link>
-                  </div>
-                </div>
-              </div>
+          <div className="mt-6 text-center space-y-4">
+            <p className="text-neutral-600">
+              Don't have an account?{' '}
+              <Link to="/customer/register" className="text-primary-600 hover:text-primary-700 font-medium">
+                Create Account
+              </Link>
+            </p>
+            <div className="flex justify-center items-center space-x-4 text-sm text-neutral-500">
+              <Link to="/seller/login" className="hover:text-primary-600">Seller Login</Link>
+              <span>|</span>
+              <Link to="/seller/register" className="hover:text-primary-600">Become a Seller</Link>
             </div>
           </div>
         </div>
