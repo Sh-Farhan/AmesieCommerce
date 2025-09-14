@@ -1,6 +1,12 @@
 import axios from 'axios'
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'
+// Use empty baseURL in development (relies on Vite proxy)
+// Require explicit VITE_API_BASE_URL for production builds
+const API_BASE_URL = import.meta.env.PROD 
+  ? import.meta.env.VITE_API_BASE_URL || (() => {
+      throw new Error('VITE_API_BASE_URL is required for production builds')
+    })()
+  : '' // Use proxy in development
 
 // Create axios instance
 const api = axios.create({
@@ -30,7 +36,11 @@ api.interceptors.response.use(
       // Token expired or invalid, redirect to login
       localStorage.removeItem('authToken')
       localStorage.removeItem('user')
-      window.location.href = '/login'
+      // Use router navigation instead of window.location for better SPA UX
+      // Note: This will be improved when we migrate to httpOnly cookies
+      if (typeof window !== 'undefined') {
+        window.location.href = '/login'
+      }
     }
     return Promise.reject(error)
   }
