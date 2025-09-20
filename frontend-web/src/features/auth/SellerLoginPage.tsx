@@ -21,7 +21,10 @@ const SellerLoginPage: React.FC = () => {
         username: credentials.email, 
         password: credentials.password 
       })
-      navigate(from, { replace: true })
+      // Small delay to ensure user data is refetched before redirect
+      setTimeout(() => {
+        navigate(from, { replace: true })
+      }, 100)
     } catch (err: any) {
       setError(err.message || 'Seller login failed. Please try again.')
     }

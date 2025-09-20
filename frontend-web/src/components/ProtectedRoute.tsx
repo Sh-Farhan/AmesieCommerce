@@ -1,6 +1,6 @@
 import React from 'react'
 import { Navigate, useLocation } from 'react-router-dom'
-import { useAuth } from '@/features/auth/AuthProvider'
+import { useIsAuthenticated } from '@/shared/hooks/useAuth'
 
 interface ProtectedRouteProps {
   children: React.ReactNode
@@ -8,22 +8,21 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requireRole }) => {
-  const { isAuthenticated, user, isLoading } = useAuth()
+  const { isAuthenticated, user, isLoading } = useIsAuthenticated()
   const location = useLocation()
 
   if (isLoading) {
     return (
-      <div className="d-flex justify-content-center align-items-center" style={{ height: '50vh' }}>
-        <div className="spinner-border" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </div>
+      <div className="flex justify-center items-center" style={{ height: '50vh' }}>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
       </div>
     )
   }
 
   if (!isAuthenticated) {
-    // Redirect to login page with return url
-    return <Navigate to="/login" state={{ from: location }} replace />
+    // Redirect to appropriate login page based on the required role
+    const loginPath = requireRole === 'SELLER' ? '/seller/login' : '/customer/login'
+    return <Navigate to={loginPath} state={{ from: location }} replace />
   }
 
   if (requireRole && user?.role !== requireRole) {
