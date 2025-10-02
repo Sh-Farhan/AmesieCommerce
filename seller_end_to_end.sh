@@ -1,0 +1,157 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# ================= CONFIG (override via env when running) =================
+BASE="${BASE:-http://localhost:8000}"
+
+# Seller info. Default email is randomized so you don't hit "already exists".
+RAND="${RAND:-$RANDOM$(date +%s)}"
+EMAIL="${EMAIL:-seller_${RAND}@example.com}"
+PASS="${PASS:-StrongPass123}"
+FULL_NAME="${FULL_NAME:-CLI Seller}"
+PHONE="${PHONE:-+91-9000000001}"
+STORE_NAME="${STORE_NAME:-CLI Store}"
+STORE_ADDR="${STORE_ADDR:-42 Bazaar Street}"
+STORE_DESC="${STORE_DESC:-General goods}"
+
+# Product fields per your Swagger schema
+NAME="${NAME:-CLI Shirt}"
+DESC="${DESC:-Black cotton tee, size M}"
+PRICE="${PRICE:-799}"                        # number
+SKU="${SKU:-SKU-${RAND}}"                     # unique-ish each run
+IMAGE_URL="${IMAGE_URL:-http://example.com/shirt.jpg}"
+STOCK_QTY="${STOCK_QTY:-25}"
+WEIGHT="${WEIGHT:-0.3}"
+LENGTH="${LENGTH:-25}"
+WIDTH="${WIDTH:-20}"
+HEIGHT="${HEIGHT:-2}"
+SHIP_INFO="${SHIP_INFO:-Ships in 3-5 days}"
+CATEGORY_ID="${CATEGORY_ID:-1}"               # must exist in DB
+# ========================================================================
+
+say()  { printf "\n\033[1;36m%s\033[0m\n" "$*"; }
+fail() { printf "\n\033[1;31mERROR:\033[0m %s\n" "$*" >&2; exit 1; }
+
+# tiny JSON extractor (no jq needed)
+json_get () { python3 - "$@" <<'PY'
+import sys, json
+try:
+    data=json.load(sys.stdin)
+    key=sys.argv[1]
+    cur=data
+    for part in key.split('.'):
+        if isinstance(cur, dict): cur = cur.get(part, {})
+        else: cur = {}
+    if isinstance(cur, (dict, list)):
+        print("")
+    else:
+        print(cur)
+except Exception:
+    print("")
+PY
+}
+
+# ============= 1) REGISTER SELLER (idempotent) ============================
+say "Registering seller: $EMAIL"
+REGISTER_BODY=$(cat <<JSON
+{
+  "full_name": "$FULL_NAME",
+  "email": "$EMAIL",
+  "phone_number": "$PHONE",
+  "password": "$PASS",
+  "store_name": "$STORE_NAME",
+  "store_address": "$STORE_ADDR",
+  "store_description": "$STORE_DESC",
+  "business_license": "",
+  "gst_number": "",
+  "bank_account_number": "",
+  "bank_ifsc_code": ""
+}
+JSON
+)
+
+REG_STATUS=$(curl -sS -o /tmp/reg.body -w "%{http_code}" \
+  -X POST "$BASE/api/auth/register/seller" \
+  -H "Content-Type: application/json" \
+  --data-raw "$REGISTER_BODY" || true)
+
+if [[ "$REG_STATUS" =~ ^20[01]$ ]]; then
+  say "Seller registered."
+elif [[ "$REG_STATUS" == "400" || "$REG_STATUS" == "409" || "$REG_STATUS" == "422" ]]; then
+  say "Seller likely exists (status $REG_STATUS). Continuing to login."
+else
+  cat /tmp/reg.body
+  fail "Unexpected register status: $REG_STATUS"
+fi
+
+# ============= 2) LOGIN (OAuth2 form EXACTLY like Swagger) ===============
+say "Logging in (OAuth2 form)…"
+LOGIN_RAW=$(
+  curl -sS -X POST "$BASE/api/auth/login" \
+    -H "Content-Type: application/x-www-form-urlencoded" \
+    -d "grant_type=password&username=$EMAIL&password=$PASS&scope=&client_id=string&client_secret=string"
+)
+echo "Login response: $LOGIN_RAW" | sed 's/.\{0\}//' >/dev/null
+
+TOKEN=$(printf '%s' "$LOGIN_RAW" | json_get access_token)
+if [[ -z "$TOKEN" ]]; then
+  echo "$LOGIN_RAW"
+  fail "Login failed. No access_token in response."
+fi
+DOTS=$(echo -n "$TOKEN" | tr -cd '.' | wc -c)
+LEN=$(echo -n "$TOKEN" | wc -c)
+[[ "$DOTS" -ne 2 || "$LEN" -lt 150 ]] && fail "Token looks suspicious (dots=$DOTS len=$LEN)."
+
+say "Token acquired (len=$LEN)."
+
+# ============= 3) WHO AM I? (get seller_id) ==============================
+say "Fetching /api/auth/me…"
+ME_RAW=$(curl -sS "$BASE/api/auth/me" -H "Authorization: Bearer $TOKEN" -H "Accept: application/json")
+echo "Me: $ME_RAW" | sed 's/.\{0\}//' >/dev/null
+
+SELLER_ID=$(printf '%s' "$ME_RAW" | json_get seller_id)
+[[ -z "$SELLER_ID" || "$SELLER_ID" == "None" ]] && SELLER_ID=$(printf '%s' "$ME_RAW" | json_get id)
+
+if [[ -z "$SELLER_ID" || "$SELLER_ID" == "None" ]]; then
+  echo "$ME_RAW"
+  fail "Could not determine seller_id from /me. Are you logged in as a seller?"
+fi
+say "Using seller_id=$SELLER_ID"
+
+# ============= 4) CREATE PRODUCT ========================================
+say "Creating product \"$NAME\" (SKU: $SKU)…"
+PRODUCT_BODY=$(cat <<JSON
+{
+  "name": "$NAME",
+  "description": "$DESC",
+  "price": $PRICE,
+  "sku": "$SKU",
+  "image_url": "$IMAGE_URL",
+  "stock_quantity": $STOCK_QTY,
+  "weight": $WEIGHT,
+  "length": $LENGTH,
+  "width": $WIDTH,
+  "height": $HEIGHT,
+  "shipping_info": "$SHIP_INFO",
+  "category_id": $CATEGORY_ID,
+  "seller_id": $SELLER_ID,
+  "images": []
+}
+JSON
+)
+
+CREATE_STATUS=$(curl -sS -o /tmp/create.body -w "%{http_code}" \
+  -X POST "$BASE/api/sellers/products" \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  --data-raw "$PRODUCT_BODY")
+
+cat /tmp/create.body
+[[ "$CREATE_STATUS" == "201" ]] || fail "Product not created (status $CREATE_STATUS)."
+
+NEW_ID=$(cat /tmp/create.body | json_get id)
+say "✅ Success. Created product id: ${NEW_ID:-unknown}"
+
+# ============= 5) OPTIONAL: list seller products =========================
+say "Listing seller products (first page)…"
+curl -sS "$BASE/api/sellers/products" -H "Authorization: Bearer $TOKEN" | sed -e 's/},{/},\n{/g' | head -n 30
