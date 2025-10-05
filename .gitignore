@@ -1,5 +1,7 @@
 # Python-generated files
 __pycache__/
+node_modules/
+.expo/
 *.py[oc]
 build/
 dist/

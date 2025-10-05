@@ -1,0 +1,47 @@
+2025-10-02 20:26:12,578 - main - INFO - Starting Shopease E-commerce Platform
+2025-10-02 20:26:12,924 - main - INFO - Database tables created/verified
+2025-10-02 20:28:47,530 - main - INFO - GET /docs - Status: 200 - Time: 0.001s - Client: 127.0.0.1
+2025-10-02 20:28:47,972 - main - INFO - GET /openapi.json - Status: 200 - Time: 0.167s - Client: 127.0.0.1
+2025-10-02 20:28:59,120 - main - ERROR - POST /api/auth/register/seller - ERROR: bcrypt: no backends available -- recommend you install one (e.g. 'pip install bcrypt') - Time: 0.167s - Client: 127.0.0.1
+2025-10-02 20:31:56,522 - main - INFO - Starting Shopease E-commerce Platform
+2025-10-02 20:31:56,532 - main - INFO - Database tables created/verified
+2025-10-02 20:32:00,104 - main - INFO - GET /docs - Status: 200 - Time: 0.001s - Client: 127.0.0.1
+2025-10-02 20:32:00,455 - main - INFO - GET /openapi.json - Status: 200 - Time: 0.126s - Client: 127.0.0.1
+2025-10-02 20:32:56,576 - main - ERROR - POST /api/auth/register/seller - ERROR: bcrypt: no backends available -- recommend you install one (e.g. 'pip install bcrypt') - Time: 0.133s - Client: 127.0.0.1
+2025-10-02 20:35:50,881 - main - INFO - Starting Shopease E-commerce Platform
+2025-10-02 20:35:50,902 - main - INFO - Database tables created/verified
+2025-10-02 20:37:20,310 - main - INFO - POST /api/auth/register/seller - Status: 422 - Time: 0.009s - Client: 127.0.0.1
+2025-10-02 20:41:52,631 - main - ERROR - POST /api/auth/register/seller - ERROR: bcrypt: no backends available -- recommend you install one (e.g. 'pip install bcrypt') - Time: 0.188s - Client: 127.0.0.1
+2025-10-02 20:42:40,380 - main - INFO - Starting Shopease E-commerce Platform
+2025-10-02 20:42:40,389 - main - INFO - Database tables created/verified
+2025-10-02 20:42:43,892 - main - ERROR - POST /api/auth/register/seller - ERROR: bcrypt: no backends available -- recommend you install one (e.g. 'pip install bcrypt') - Time: 0.091s - Client: 127.0.0.1
+2025-10-02 20:45:13,607 - main - INFO - Starting Shopease E-commerce Platform
+2025-10-02 20:45:13,617 - main - INFO - Database tables created/verified
+2025-10-02 20:45:17,084 - main - ERROR - POST /api/auth/register/seller - ERROR: bcrypt: no backends available -- recommend you install one (e.g. 'pip install bcrypt') - Time: 0.071s - Client: 127.0.0.1
+2025-10-02 20:46:15,878 - main - INFO - Starting Shopease E-commerce Platform
+2025-10-02 20:46:15,899 - main - INFO - Database tables created/verified
+2025-10-02 20:46:23,126 - main - ERROR - POST /api/auth/register/seller - ERROR: bcrypt: no backends available -- recommend you install one (e.g. 'pip install bcrypt') - Time: 0.115s - Client: 127.0.0.1
+2025-10-02 22:06:44,987 - main - INFO - Starting Shopease E-commerce Platform
+2025-10-02 22:06:45,001 - main - INFO - Database tables created/verified
+2025-10-02 22:06:51,502 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "C:\Users\FARHAN SHAIKH\FULLSTACK DeV\AMESIE\amesiecommerce\.venv\Lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2025-10-02 22:06:51,810 - main - INFO - POST /api/auth/register/seller - Status: 200 - Time: 0.365s - Client: 127.0.0.1
+2025-10-02 22:08:10,191 - auth - INFO - Login attempt for user: priya.singh.crafts@example.com
+2025-10-02 22:08:10,415 - auth - INFO - Successful login for user: priya.singh.crafts@example.com (Role: SELLER)
+2025-10-02 22:08:10,460 - main - INFO - POST /api/auth/login - Status: 200 - Time: 0.270s - Client: 127.0.0.1
+2025-10-02 22:09:01,526 - main - INFO - GET /docs - Status: 200 - Time: 0.001s - Client: 127.0.0.1
+2025-10-02 22:09:02,013 - main - INFO - GET /openapi.json - Status: 200 - Time: 0.137s - Client: 127.0.0.1
+2025-10-02 22:09:54,963 - auth - INFO - Login attempt for user: priya.singh.crafts@example.com
+2025-10-02 22:09:55,182 - auth - INFO - Successful login for user: priya.singh.crafts@example.com (Role: SELLER)
+2025-10-02 22:09:55,184 - main - INFO - POST /api/auth/login - Status: 200 - Time: 0.224s - Client: 127.0.0.1
+2025-10-02 22:10:06,925 - auth - INFO - Login attempt for user: priya.singh.crafts@example.com
+2025-10-02 22:10:07,146 - auth - INFO - Successful login for user: priya.singh.crafts@example.com (Role: SELLER)
+2025-10-02 22:10:07,147 - main - INFO - POST /api/auth/login - Status: 200 - Time: 0.224s - Client: 127.0.0.1
+2025-10-02 22:10:25,793 - main - INFO - GET /docs - Status: 200 - Time: 0.000s - Client: 127.0.0.1
+2025-10-02 22:10:26,044 - main - INFO - GET /openapi.json - Status: 200 - Time: 0.002s - Client: 127.0.0.1
+2025-10-02 22:31:34,393 - main - INFO - GET /docs - Status: 200 - Time: 0.004s - Client: 127.0.0.1
+2025-10-02 22:31:34,646 - main - INFO - GET /openapi.json - Status: 200 - Time: 0.002s - Client: 127.0.0.1

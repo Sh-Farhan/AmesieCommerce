@@ -1,0 +1,6 @@
+2025-10-02 22:08:10,191 - auth - INFO - Login attempt for user: priya.singh.crafts@example.com
+2025-10-02 22:08:10,415 - auth - INFO - Successful login for user: priya.singh.crafts@example.com (Role: SELLER)
+2025-10-02 22:09:54,963 - auth - INFO - Login attempt for user: priya.singh.crafts@example.com
+2025-10-02 22:09:55,182 - auth - INFO - Successful login for user: priya.singh.crafts@example.com (Role: SELLER)
+2025-10-02 22:10:06,925 - auth - INFO - Login attempt for user: priya.singh.crafts@example.com
+2025-10-02 22:10:07,146 - auth - INFO - Successful login for user: priya.singh.crafts@example.com (Role: SELLER)
