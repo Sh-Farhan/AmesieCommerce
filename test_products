@@ -1,0 +1,2 @@
+curl -s http://localhost:8001/api/products | jq
+curl -s http://localhost:8001/api/products/categories | jq
