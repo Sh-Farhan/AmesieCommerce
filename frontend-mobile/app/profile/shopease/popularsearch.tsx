@@ -51,7 +51,7 @@ export default function PopularSearch() {
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.contentWrapper}>
         <View style={styles.searchBar}>
-          <Image source={require("../assets/images/Search.png")} style={styles.searchIcon} />
+          <Image source={require("../../../assets/images/Search.png")} style={styles.searchIcon} />
           <TextInput
             value={search}
             onChangeText={setSearch}
@@ -62,7 +62,7 @@ export default function PopularSearch() {
             selectionColor="#969598"
             autoFocus
           />
-          <Image source={require("../assets/images/Group.png")} style={styles.micIcon} />
+          <Image source={require("../../../assets/images/Group.png")} style={styles.micIcon} />
         </View>
         <View style={styles.popularPanel}>
           <View style={styles.popularHeader}>

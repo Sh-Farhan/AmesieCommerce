@@ -247,14 +247,14 @@ const scale = (px: number) => (px / 428) * width;
 
 // FIXED PATHS
 const brands = [
-  { name: "ARMANI JEANS", logo: require("../assets/images/armanilogo.png") },
-  { name: "ZARA COLLECTION 19", logo: require("../assets/images/zaralogo.png") },
-  { name: "BURBERRY", logo: require("../assets/images/burberrylogo.png") },
-  { name: "BALENCIAGA", logo: require("../assets/images/balenciagalogo.png") },
-  { name: "VANS OFF THE WALL", logo: require("../assets/images/vanslogo.png") },
-  { name: "GUESS", logo: require("../assets/images/guesslogo.png") },
-  { name: "STONE ISLAND", logo: require("../assets/images/stoneislandlogo.png") },
-  { name: "GIVENCHY PARIS", logo: require("../assets/images/givenchylogo.png") },
+  { name: "ARMANI JEANS", logo: require("../../../assets/images/armanilogo.png") },
+  { name: "ZARA COLLECTION 19", logo: require("../../../assets/images/zaralogo.png") },
+  { name: "BURBERRY", logo: require("../../../assets/images/burberrylogo.png") },
+  { name: "BALENCIAGA", logo: require("../../../assets/images/balenciagalogo.png") },
+  { name: "VANS OFF THE WALL", logo: require("../../../assets/images/vanslogo.png") },
+  { name: "GUESS", logo: require("../../../assets/images/guesslogo.png") },
+  { name: "STONE ISLAND", logo: require("../../../assets/images/stoneislandlogo.png") },
+  { name: "GIVENCHY PARIS", logo: require("../../../assets/images/givenchylogo.png") },
 ];
 
 export default function FamousBrand() {
@@ -273,7 +273,7 @@ export default function FamousBrand() {
           <View style={styles.headerBackCircle}>
             <Image
               // FIXED PATH
-              source={require("../assets/images/back.png")}
+              source={require("../../../assets/images/back.png")}
               style={styles.headerBackIcon}
             />
           </View>
@@ -287,7 +287,7 @@ export default function FamousBrand() {
         <Image
           style={styles.bannerImg}
           // FIXED PATH
-          source={require("../assets/images/famous-brand-girl.png")}
+          source={require("../../../assets/images/famous-brand-girl.png")}
         />
         <Text style={styles.bannerText}>Famous Brand</Text>
       </View>
@@ -319,32 +319,32 @@ export default function FamousBrand() {
       <View style={styles.footer}>
         <TouchableOpacity style={styles.footerItem}>
           {/* FIXED PATH */}
-          <Image source={require("../assets/images/logo.png")} style={[styles.footerLogo, activeTab === "Amesie" && styles.footerIconActive]} />
+          <Image source={require("../../../assets/images/logo.png")} style={[styles.footerLogo, activeTab === "Amesie" && styles.footerIconActive]} />
           <Text style={[styles.footerLabel, activeTab === "Amesie" && styles.footerLabelActive]}>Amesie</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.footerItem} onPress={() => router.push("/")}>
           {/* FIXED PATH */}
-          <Image source={require("../assets/images/home-active.png")} style={[styles.footerIcon, activeTab === "Home" && styles.footerIconActive]} />
+          <Image source={require("../../../assets/images/home-active.png")} style={[styles.footerIcon, activeTab === "Home" && styles.footerIconActive]} />
           <Text style={[styles.footerLabel, activeTab === "Home" && styles.footerLabelActive]}>Home</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.footerItem} onPress={() => router.push("/category")}>
           {/* FIXED PATH */}
-          <Image source={require("../assets/images/category.png")} style={[styles.footerIcon, activeTab === "Categories" && styles.footerIconActive]} />
+          <Image source={require("../../../assets/images/category.png")} style={[styles.footerIcon, activeTab === "Categories" && styles.footerIconActive]} />
           <Text style={[styles.footerLabel, activeTab === "Categories" && styles.footerLabelActive]}>Categories</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.footerItem} onPress={() => router.push("/bag")}>
           {/* FIXED PATH */}
-          <Image source={require("../assets/images/bag.png")} style={[styles.footerIcon, activeTab === "Bag" && styles.footerIconActive]} />
+          <Image source={require("../../../assets/images/bag.png")} style={[styles.footerIcon, activeTab === "Bag" && styles.footerIconActive]} />
           <Text style={[styles.footerLabel, activeTab === "Bag" && styles.footerLabelActive]}>Bag</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.footerItem} onPress={() => router.push("/wishlist")}>
           {/* FIXED PATH */}
-          <Image source={require("../assets/images/heart.png")} style={[styles.footerIcon, activeTab === "Wishlist" && styles.footerIconActive]} />
+          <Image source={require("../../../assets/images/heart.png")} style={[styles.footerIcon, activeTab === "Wishlist" && styles.footerIconActive]} />
           <Text style={[styles.footerLabel, activeTab === "Wishlist" && styles.footerLabelActive]}>Wishlist</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.footerItem} onPress={() => router.push("/account")}>
           {/* FIXED PATH */}
-          <Image source={require("../assets/images/account.png")} style={[styles.footerIcon, activeTab === "Account" && styles.footerIconActive]} />
+          <Image source={require("../../../assets/images/account.png")} style={[styles.footerIcon, activeTab === "Account" && styles.footerIconActive]} />
           <Text style={[styles.footerLabel, activeTab === "Account" && styles.footerLabelActive]}>Account</Text>
         </TouchableOpacity>
       </View>

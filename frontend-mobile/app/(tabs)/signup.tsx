@@ -284,7 +284,7 @@ export default function SignUpScreen() {
   }
 
   return (
-    <ImageBackground source={require("@/assets/images/amesie/Splash Page_01.png")} style={styles.backgroundImage}>
+    <ImageBackground source={require("../../assets/images/amesie/Splash_Page_01.png")} style={styles.backgroundImage}>
       <SafeAreaView style={styles.container}>
         <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.keyboardAvoidView}>
           <ScrollView contentContainerStyle={styles.scrollView}>

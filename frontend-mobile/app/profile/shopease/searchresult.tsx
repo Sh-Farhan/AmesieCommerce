@@ -19,7 +19,7 @@ const scale = (px: number) => (px / 428) * screenWidth;
 const PRODUCTS = [
   {
     id: "1",
-    image: require("../assets/images/brown-jeans.png"),
+    image: require("../../../assets/images/brown-jeans.png"),
     name: "Dust Jeans",
     brand: "Kotty",
     price: "₹ 398.90",
@@ -27,7 +27,7 @@ const PRODUCTS = [
   },
   {
     id: "2",
-    image: require("../assets/images/blue-jeans.png"),
+    image: require("../../../assets/images/blue-jeans.png"),
     name: "Dust Jeans",
     brand: "Kotty",
     price: "₹ 398.90",
@@ -35,7 +35,7 @@ const PRODUCTS = [
   },
   {
     id: "3",
-    image: require("../assets/images/lblue-jeans.png"),
+    image: require("../../../assets/images/lblue-jeans.png"),
     name: "Dust Jeans",
     brand: "Kotty",
     price: "₹ 398.90",
@@ -43,7 +43,7 @@ const PRODUCTS = [
   },
   {
     id: "4",
-    image: require("../assets/images/brwon-jeans-2.png"),
+    image: require("../../../assets/images/brwon-jeans-2.png"),
     name: "Dust Jeans",
     brand: "Kotty",
     price: "₹ 398.90",
@@ -51,7 +51,7 @@ const PRODUCTS = [
   },
   {
     id: "5",
-    image: require("../assets/images/blue-jeans-3.png"),
+    image: require("../../../assets/images/blue-jeans-3.png"),
     name: "Dust Jeans",
     brand: "Kotty",
     price: "₹ 398.90",
@@ -59,7 +59,7 @@ const PRODUCTS = [
   },
   {
     id: "6",
-    image: require("../assets/images/blue-jeans-4.png"),
+    image: require("../../../assets/images/blue-jeans-4.png"),
     name: "Dust Jeans",
     brand: "Kotty",
     price: "₹ 398.90",
@@ -67,7 +67,7 @@ const PRODUCTS = [
   },
   {
     id: "7",
-    image: require("../assets/images/blue-jeans-3.png"),
+    image: require("../../../assets/images/blue-jeans-3.png"),
     name: "Dust Jeans",
     brand: "Kotty",
     price: "₹ 398.90",
@@ -75,7 +75,7 @@ const PRODUCTS = [
   },
   {
     id: "8",
-    image: require("../assets/images/blue-jeans-4.png"),
+    image: require("../../../assets/images/blue-jeans-4.png"),
     name: "Dust Jeans",
     brand: "Kotty",
     price: "₹ 398.90",
@@ -102,7 +102,7 @@ export default function SearchResult() {
       <View style={styles.contentWrapper}>
         {/* Search bar */}
         <View style={styles.searchBar}>
-          <Image source={require("../assets/images/Search.png")} style={styles.searchIcon} />
+          <Image source={require("../../../assets/images/Search.png")} style={styles.searchIcon} />
           <TextInput
             placeholder="Search what you need"
             placeholderTextColor="#969598"
@@ -111,23 +111,23 @@ export default function SearchResult() {
             selectionColor="#969598"
           />
           <TouchableOpacity>
-            <Image source={require("../assets/images/Group.png")} style={styles.micIcon} />
+            <Image source={require("../../../assets/images/Group.png")} style={styles.micIcon} />
           </TouchableOpacity>
         </View>
         {/* Sort/Filter/View controls */}
         <View style={styles.toolbar}>
           <TouchableOpacity style={styles.toolbarItem}>
-            <Image source={require("../assets/images/sort.png")} style={styles.toolbarIcon} />
+            <Image source={require("../../../assets/images/sort.png")} style={styles.toolbarIcon} />
             <Text style={styles.toolbarText}>Sort</Text>
           </TouchableOpacity>
           <View style={styles.toolbarDivider} />
           <TouchableOpacity style={styles.toolbarItem}>
-            <Image source={require("../assets/images/filter.png")} style={styles.toolbarIcon} />
+            <Image source={require("../../../assets/images/filter.png")} style={styles.toolbarIcon} />
             <Text style={styles.toolbarText}>Filter</Text>
           </TouchableOpacity>
           <View style={styles.toolbarDivider} />
           <TouchableOpacity style={styles.toolbarItem}>
-            <Image source={require("../assets/images/view.png")} style={styles.toolbarIcon} />
+            <Image source={require("../../../assets/images/view.png")} style={styles.toolbarIcon} />
             <Text style={styles.toolbarText}>View</Text>
           </TouchableOpacity>
         </View>
@@ -150,8 +150,8 @@ export default function SearchResult() {
                     <Image
                       source={
                         likedIds.has(item.id)
-                          ? require("../assets/images/heart-filled.png")
-                          : require("../assets/images/heart-outline.png")
+                          ? require("../../../assets/images/heart-filled.png")
+                          : require("../../../assets/images/heart-outline.png")
                       }
                       style={styles.heartIcon}
                     />
@@ -169,7 +169,7 @@ export default function SearchResult() {
       <View style={styles.footer}>
         <TouchableOpacity style={styles.footerItem}onPress={() => router.push("/")}>
           <Image
-            source={require("../assets/images/logo.png")}
+            source={require("../../../assets/images/logo.png")}
             style={[
               styles.footerLogo,
               activeTab === "Amesie" && styles.footerIconActive
@@ -179,7 +179,7 @@ export default function SearchResult() {
         </TouchableOpacity>
         <TouchableOpacity style={styles.footerItem} onPress={() => router.push("/")}>
           <Image
-            source={require("../assets/images/home-active.png")}
+            source={require("../../../assets/images/home-active.png")}
             style={[
               styles.footerIcon,
               activeTab === "Home" && styles.footerIconActive,
@@ -189,7 +189,7 @@ export default function SearchResult() {
         </TouchableOpacity>
         <TouchableOpacity style={styles.footerItem} onPress={() => router.push("/category")}>
           <Image
-            source={require("../assets/images/category.png")}
+            source={require("../../../assets/images/category.png")}
             style={[
               styles.footerIcon,
               activeTab === "Categories" && styles.footerIconActive,
@@ -199,7 +199,7 @@ export default function SearchResult() {
         </TouchableOpacity>
         <TouchableOpacity style={styles.footerItem} onPress={() => router.push("/bag")}>
           <Image
-            source={require("../assets/images/bag.png")}
+            source={require("../../../assets/images/bag.png")}
             style={[
               styles.footerIcon,
               activeTab === "Bag" && styles.footerIconActive,
@@ -209,7 +209,7 @@ export default function SearchResult() {
         </TouchableOpacity>
         <TouchableOpacity style={styles.footerItem} onPress={() => setActiveTab("/wishlist")}>
           <Image
-            source={require("../assets/images/heart.png")}
+            source={require("../../../assets/images/heart.png")}
             style={[
               styles.footerIcon,
               activeTab === "Wishlist" && styles.footerIconActive,
@@ -219,7 +219,7 @@ export default function SearchResult() {
         </TouchableOpacity>
         <TouchableOpacity style={styles.footerItem} onPress={() => setActiveTab("/account")}>
           <Image
-            source={require("../assets/images/account.png")}
+            source={require("../../../assets/images/account.png")}
             style={[
               styles.footerIcon,
               activeTab === "Account" && styles.footerIconActive,

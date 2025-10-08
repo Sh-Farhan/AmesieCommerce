@@ -541,11 +541,11 @@ const categoriesList = [
 
 // All paths here are now correct
 const products = [
-    { id: "1", image: require("../assets/images/Rectangle-59-2.png"), name: "Dust Jeans", brand: "Kotty", price: "₹ 398.90",  oldPrice: "₹ 402.90" },
-    { id: "2", image: require("../assets/images/Rectangle-60-2.png"), name: "Dust Jeans", brand: "Kotty", price: "₹ 398.90",  oldPrice: "₹ 402.90" },
-    { id: "3", image: require("../assets/images/Rectangle-60-1.png"), name: "Dust Jeans", brand: "Kotty", price: "₹ 398.90",  oldPrice: "₹ 402.90" },
-    { id: "4", image: require("../assets/images/Rectangle-60.png"), name: "Dust Jeans", brand: "Kotty", price: "₹ 398.90",  oldPrice: "₹ 402.90" },
-    { id: "5", image: require("../assets/images/Rectangle-59.png"), name: "Dust Jeans", brand: "Kotty", price: "₹ 398.90",  oldPrice: "₹ 402.90" },
+    { id: "1", image: require("../../../assets/images/Rectangle-59-2.png"), name: "Dust Jeans", brand: "Kotty", price: "₹ 398.90",  oldPrice: "₹ 402.90" },
+    { id: "2", image: require("../../../assets/images/Rectangle-60-2.png"), name: "Dust Jeans", brand: "Kotty", price: "₹ 398.90",  oldPrice: "₹ 402.90" },
+    { id: "3", image: require("../../../assets/images/Rectangle-60-1.png"), name: "Dust Jeans", brand: "Kotty", price: "₹ 398.90",  oldPrice: "₹ 402.90" },
+    { id: "4", image: require("../../../assets/images/Rectangle-60.png"), name: "Dust Jeans", brand: "Kotty", price: "₹ 398.90",  oldPrice: "₹ 402.90" },
+    { id: "5", image: require("../../../assets/images/Rectangle-59.png"), name: "Dust Jeans", brand: "Kotty", price: "₹ 398.90",  oldPrice: "₹ 402.90" },
 ];
 
 const popularSearches = [
@@ -603,7 +603,7 @@ export default function Discount() {
             <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={styles.pageContainer} showsVerticalScrollIndicator={false}>
                 {/* Search bar */}
                 <View style={styles.searchBar}>
-                    <Image source={require("../assets/images/Search.png")} style={styles.searchIcon} />
+                    <Image source={require("../../../assets/images/Search.png")} style={styles.searchIcon} />
                     <TextInput
                         placeholder="Search what you need"
                         placeholderTextColor="#969598"
@@ -613,7 +613,7 @@ export default function Discount() {
                         onFocus={() => { router.push('/popularsearch'); setSearchFocused(true); }}
                         onBlur={() => { setSearchFocused(false); }}
                     />
-                    <Image source={require("../assets/images/Group.png")} style={styles.micIcon} />
+                    <Image source={require("../../../assets/images/Group.png")} style={styles.micIcon} />
                 </View>
 
                 {/* Timer */}
@@ -659,7 +659,7 @@ export default function Discount() {
                                     <Text style={styles.productTitle} numberOfLines={1}>{item.name}</Text>
                                     <TouchableOpacity onPress={() => toggleLike(item.id)}>
                                         <Image
-                                            source={likedIds.has(item.id) ? require("../assets/images/heart-filled.png") : require("../assets/images/heart-outline.png")}
+                                            source={likedIds.has(item.id) ? require("../../../assets/images/heart-filled.png") : require("../../../assets/images/heart-outline.png")}
                                             style={styles.heartIconInline}
                                         />
                                     </TouchableOpacity>
@@ -683,12 +683,12 @@ export default function Discount() {
                             hitSlop={{ top: 13, bottom: 13, left: 13, right: 13 }}
                         >
                             <Image
-                                source={require("../assets/images/Vector.png")}
+                                source={require("../../../assets/images/Vector.png")}
                                 style={styles.adCloseIcon}
                             />
                         </TouchableOpacity>
                         <Image
-                            source={require("../assets/images/addpopup.png")}
+                            source={require("../../../assets/images/addpopup.png")}
                             style={styles.adImage}
                             resizeMode="contain"
                         />
@@ -699,27 +699,27 @@ export default function Discount() {
             {/* Footer Tab Bar */}
             <View style={styles.footer}>
                 <TouchableOpacity style={styles.footerItem} onPress={() => router.push("/amesie")}>
-                    <Image source={require("../assets/images/logo.png")} style={[styles.footerLogo, activeTab === "Amesie" && styles.footerIconActive]} />
+                    <Image source={require("../../../assets/images/logo.png")} style={[styles.footerLogo, activeTab === "Amesie" && styles.footerIconActive]} />
                     <Text style={[styles.footerLabel, activeTab === "Amesie" && styles.footerLabelActive]}>Amesie</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.footerItem} onPress={() => router.push("/")}>
-                    <Image source={require("../assets/images/home-active.png")} style={[styles.footerIcon, activeTab === "Home" && styles.footerIconActive]} />
+                    <Image source={require("../../../assets/images/home-active.png")} style={[styles.footerIcon, activeTab === "Home" && styles.footerIconActive]} />
                     <Text style={[styles.footerLabel, activeTab === "Home" && styles.footerLabelActive]}>Home</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.footerItem} onPress={() => router.push("/category")}>
-                    <Image source={require("../assets/images/category.png")} style={[styles.footerIcon, activeTab === "Categories" && styles.footerIconActive]} />
+                    <Image source={require("../../../assets/images/category.png")} style={[styles.footerIcon, activeTab === "Categories" && styles.footerIconActive]} />
                     <Text style={[styles.footerLabel, activeTab === "Categories" && styles.footerLabelActive]}>Categories</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.footerItem} onPress={() => router.push("/bag")}>
-                    <Image source={require("../assets/images/bag.png")} style={[styles.footerIcon, activeTab === "Bag" && styles.footerIconActive]} />
+                    <Image source={require("../../../assets/images/bag.png")} style={[styles.footerIcon, activeTab === "Bag" && styles.footerIconActive]} />
                     <Text style={[styles.footerLabel, activeTab === "Bag" && styles.footerLabelActive]}>Bag</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.footerItem} onPress={() => router.push("/wishlist")}>
-                    <Image source={require("../assets/images/heart.png")} style={[styles.footerIcon, activeTab === "Wishlist" && styles.footerIconActive]} />
+                    <Image source={require("../../../assets/images/heart.png")} style={[styles.footerIcon, activeTab === "Wishlist" && styles.footerIconActive]} />
                     <Text style={[styles.footerLabel, activeTab === "Wishlist" && styles.footerLabelActive]}>Wishlist</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.footerItem} onPress={() => router.push("/account")}>
-                    <Image source={require("../assets/images/account.png")} style={[styles.footerIcon, activeTab === "Account" && styles.footerIconActive]} />
+                    <Image source={require("../../../assets/images/account.png")} style={[styles.footerIcon, activeTab === "Account" && styles.footerIconActive]} />
                     <Text style={[styles.footerLabel, activeTab === "Account" && styles.footerLabelActive]}>Account</Text>
                 </TouchableOpacity>
             </View>

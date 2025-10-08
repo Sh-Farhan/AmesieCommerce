@@ -15,7 +15,7 @@ export default function Onboarding1() {
       <TouchableOpacity
       style={styles.button}
       // onPress={() => router.push("./screen2")}
-      onPress={() => router.push("./profile/shopease/bag.tsx")}
+      onPress={() => router.push("/.profile/shopease/bag.tsx")}
       >
         <Text style={styles.buttonText}>Next</Text>
       </TouchableOpacity>

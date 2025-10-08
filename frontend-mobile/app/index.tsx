@@ -71,8 +71,8 @@ export default function SplashScreen() {
   return (
     <View style={styles.container}>
       <Image
-        source={require("@/assets/images/amesie/Splash Page_01.png")}
-        style={styles.image}
+        source={require("../assets/images/amesie/Splash_Page_01.png")}
+      style={styles.image}
       />
     </View>
   );

@@ -23,21 +23,21 @@ export default function WishlistPage() {
   const [wishlistItems, setWishlistItems] = useState([
   {
     id: "1",
-    image: require("../assets/images/dress.png"),
+    image: require("../../../assets/images/dress.png"),
     name: "Pull and deer",
     desc: "Fancy",
     price: "₹ 234.90",
   },
   {
     id: "2",
-    image: require("../assets/images/glasses.png"),
+    image: require("../../../assets/images/glasses.png"),
     name: "Pull and deer",
     desc: "Fancy",
     price: "₹ 234.90",
   },
   {
     id: "3",
-    image: require("../assets/images/pink-jacket.png"),
+    image: require("../../../assets/images/pink-jacket.png"),
     name: "Pull and deer",
     desc: "Fancy",
     price: "₹ 234.90",
@@ -68,7 +68,7 @@ export default function WishlistPage() {
         >
           <View style={styles.headerBackCircle}>
             <Image
-              source={require("../assets/images/back.png")}
+              source={require("../../../assets/images/back.png")}
               style={styles.headerBackIcon}
             />
           </View>
@@ -88,7 +88,7 @@ export default function WishlistPage() {
     {wishlistItems.length === 0 ? (
   <View style={{ flex: 1, alignItems: "center", justifyContent: "center", marginBottom: scale(350)  }}>
     <Image
-      source={require("../assets/images/empty-bag-happy.png")}
+      source={require("../../../assets/images/empty-bag-happy.png")}
       style={{ width: scale(156), height: scale(102), marginBottom: scale(10) }} // Adjust as needed
       resizeMode="contain"
     />
@@ -124,7 +124,7 @@ export default function WishlistPage() {
                 <TouchableOpacity style={styles.trashBtn} activeOpacity={0.7}
                   onPress={() => handleDeleteItem(item.id)}>
                   <Image
-                    source={require("../assets/images/trash.png")}
+                    source={require("../../../assets/images/trash.png")}
                     style={styles.trashIcon}
                   />
                 </TouchableOpacity>
@@ -149,27 +149,27 @@ export default function WishlistPage() {
       {/* Footer */}
       <View style={styles.footer}>
         <TouchableOpacity style={styles.footerItem}>
-          <Image source={require("../assets/images/logo.png")} style={[styles.footerLogo, activeTab === "Amesie" && styles.footerIconActive]} />
+          <Image source={require("../../../assets/images/logo.png")} style={[styles.footerLogo, activeTab === "Amesie" && styles.footerIconActive]} />
           <Text style={[styles.footerLabel, activeTab === "Amesie" && styles.footerLabelActive]}>Amesie</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.footerItem} onPress={() => router.push("/")}>
-          <Image source={require("../assets/images/home-active.png")} style={[styles.footerIcon, activeTab === "Home" && styles.footerIconActive]} />
+          <Image source={require("../../../assets/images/home-active.png")} style={[styles.footerIcon, activeTab === "Home" && styles.footerIconActive]} />
           <Text style={[styles.footerLabel, activeTab === "Home" && styles.footerLabelActive]}>Home</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.footerItem} onPress={() => router.push("/category")}>
-          <Image source={require("../assets/images/category.png")} style={[styles.footerIcon, activeTab === "Categories" && styles.footerIconActive]} />
+          <Image source={require("../../../assets/images/category.png")} style={[styles.footerIcon, activeTab === "Categories" && styles.footerIconActive]} />
           <Text style={[styles.footerLabel, activeTab === "Categories" && styles.footerLabelActive]}>Categories</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.footerItem} onPress={() => router.push("/bag")}>
-          <Image source={require("../assets/images/bag.png")} style={[styles.footerIcon, activeTab === "Bag" && styles.footerIconActive]} />
+          <Image source={require("../../../assets/images/bag.png")} style={[styles.footerIcon, activeTab === "Bag" && styles.footerIconActive]} />
           <Text style={[styles.footerLabel, activeTab === "Bag" && styles.footerLabelActive]}>Bag</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.footerItem} onPress={() => router.push("/wishlist")}>
-          <Image source={require("../assets/images/heart.png")} style={[styles.footerIcon, activeTab === "Wishlist" && styles.footerIconActive]} />
+          <Image source={require("../../../assets/images/heart.png")} style={[styles.footerIcon, activeTab === "Wishlist" && styles.footerIconActive]} />
           <Text style={[styles.footerLabel, activeTab === "Wishlist" && styles.footerLabelActive]}>Wishlist</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.footerItem} onPress={() => router.push("/account")}>
-          <Image source={require("../assets/images/account.png")} style={[styles.footerIcon, activeTab === "Account" && styles.footerIconActive]} />
+          <Image source={require("../../../assets/images/account.png")} style={[styles.footerIcon, activeTab === "Account" && styles.footerIconActive]} />
           <Text style={[styles.footerLabel, activeTab === "Account" && styles.footerLabelActive]}>Account</Text>
         </TouchableOpacity>
       </View>

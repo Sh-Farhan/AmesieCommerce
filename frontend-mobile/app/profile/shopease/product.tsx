@@ -22,21 +22,21 @@ const scaleHeight = (px: number) => (px / 1080) * screenHeight;
 const suggestions = [
   {
     id: 1,
-    image: require("../assets/images/shoes1.png"),
+    image: require("../../../assets/images/shoes1.png"),
     name: "Brown tight",
     brand: "Beor",
     price: "₹ 234.90",
   },
   {
     id: 2,
-    image: require("../assets/images/shoes2.jpg"),
+    image: require("../../../assets/images/shoes2.jpg"),
     name: "Blue candy",
     brand: "HMT",
     price: "₹ 500",
   },
   {
     id: 3,
-    image: require("../assets/images/shoes3.jpg"),
+    image: require("../../../assets/images/shoes3.jpg"),
     name: "ZIZI",
     brand: "Basic mint",
     price: "₹ 344.89",
@@ -55,7 +55,7 @@ export default function ProductPage(): JSX.Element {
         <View style={styles.card}>
           {/* Product Image */}
           <Image
-            source={require("../assets/images/lady.png")}
+            source={require("../../../assets/images/lady.png")}
             style={{
               width: scaleWidth(425),
               height: scaleHeight(796),
@@ -84,7 +84,7 @@ export default function ProductPage(): JSX.Element {
             onPress={() => router.back()}>
           
             <Image
-              source={require("../assets/images/back.png")}
+              source={require("../../../assets/images/back.png")}
               style={{ width: "30%", height: "40%" }}
             />
           </TouchableOpacity>
@@ -105,7 +105,7 @@ export default function ProductPage(): JSX.Element {
             }}
           >
             <Image
-              source={require("../assets/images/notif.png")}
+              source={require("../../../assets/images/notif.png")}
               style={{ width: "60%", height: "60%" }}
             />
           </TouchableOpacity>
