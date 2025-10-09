@@ -194,42 +194,42 @@ export default function HomeScreen() {
 
         <TouchableOpacity
           style={styles.button}
-          onPress={() => router.push("/product")}
+          onPress={() => router.push("/profile/shopease/product")}
         >
           <Text style={styles.buttonText}>Go to Product Page</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.button}
-          onPress={() => router.push("/discount")}
+          onPress={() => router.push("/profile/shopease/discount")}
         >
           <Text style={styles.buttonText}>Go to Discount Page</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.button}
-          onPress={() => router.push("/popularsearch")}
+          onPress={() => router.push("/profile/shopease/popularsearch")}
         >
           <Text style={styles.buttonText}>Go to Popular Search Page</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.button}
-          onPress={() => router.push("/searchresult")}
+          onPress={() => router.push("/profile/shopease/searchresult")}
         >
           <Text style={styles.buttonText}>Go to Search Result Page</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.button}
-          onPress={() => router.push("/category")}
+          onPress={() => router.push("/profile/shopease/category")}
         >
           <Text style={styles.buttonText}>Go to Category Page</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.button}
-          onPress={() => router.push("/bag")}
+          onPress={() => router.push("/profile/shopease/bag")}
         >
           <Text style={styles.buttonText}>Go to Bag Page</Text>
         </TouchableOpacity>
