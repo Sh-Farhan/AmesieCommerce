@@ -84,3 +84,14 @@
 2025-10-05 19:16:38,817 - auth - INFO - Successful login for user: zaid1759671997@example.com (Role: CUSTOMER)
 2025-10-05 19:16:38,856 - auth - INFO - User profile accessed: zaid1759671997@example.com
 >>>>>>> 06e23b5 (Tested customer flow (auth, cart, orders working locally))
+2025-10-12 16:42:42,256 - auth - INFO - New user registration attempt: zaidkhan93315@gmail.com
+2025-10-12 16:42:42,784 - auth - INFO - User registered successfully: zaidkhan93315@gmail.com
+2025-10-12 16:42:52,680 - auth - INFO - Login attempt for user: zaidkhan93315@gmail.com
+2025-10-12 16:42:53,072 - auth - INFO - Successful login for user: zaidkhan93315@gmail.com (Role: CUSTOMER)
+2025-10-12 16:42:53,103 - auth - INFO - User profile accessed: zaidkhan93315@gmail.com
+2025-10-12 16:50:56,827 - auth - INFO - Login attempt for user: zaidkhan93315@gmail.com
+2025-10-12 16:50:57,359 - auth - INFO - Successful login for user: zaidkhan93315@gmail.com (Role: CUSTOMER)
+2025-10-12 16:50:59,819 - auth - INFO - User profile accessed: zaidkhan93315@gmail.com
+2025-10-12 16:51:06,436 - auth - INFO - User profile accessed: zaidkhan93315@gmail.com
+2025-10-12 16:51:14,732 - auth - INFO - User profile accessed: zaidkhan93315@gmail.com
+2025-10-12 16:51:19,972 - auth - INFO - User profile accessed: zaidkhan93315@gmail.com

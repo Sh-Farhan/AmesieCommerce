@@ -1,12 +1,12 @@
-# Python-generated files
-__pycache__/
-node_modules/
-.expo/
-*.py[oc]
-build/
-dist/
-wheels/
-*.egg-info
+# Environment and secret files
+.env
+_pycache_/
+*.pyc
+*.db
+*.sqlite3
+*.log
 
-# Virtual environments
-.venv
+# Virtual environment folders
+venv/
+.env/
+.envrc
