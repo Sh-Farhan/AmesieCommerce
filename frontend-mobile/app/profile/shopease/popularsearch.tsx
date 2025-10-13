@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Image, FlatList, StyleSheet, SafeAreaView, Dimensions } from "react-native";
+import { View, Text, TextInput, Image, FlatList, StyleSheet, TouchableOpacity, SafeAreaView, Dimensions } from "react-native";
 import { Platform } from "react-native";
+import { useRouter } from "expo-router";
 
 const { width: screenWidth } = Dimensions.get("window");
 const scale = (px: number) => (px / 428) * screenWidth;
@@ -39,6 +40,7 @@ function highlightMatch(text: string, keyword: string) {
 
 export default function PopularSearch() {
   const [search, setSearch] = useState("");
+  const router = useRouter();
 
   // Filter the popular searches for partial (case-insensitive) match on any word start
   const filteredSearches = search
@@ -73,10 +75,12 @@ export default function PopularSearch() {
             keyboardShouldPersistTaps="handled"
             keyExtractor={(item) => item}
             renderItem={({ item, index }) => (
+              <TouchableOpacity  onPress={() => router.push("/profile/shopease/searchresult")}>
               <View>
                 {highlightMatch(item, search)}
                 {index < filteredSearches.length - 1 && <View style={styles.separator} />}
               </View>
+              </TouchableOpacity>
             )}
             ListEmptyComponent={<Text style={{ color: "#aaa", padding: 18 }}>No results found</Text>}
           />

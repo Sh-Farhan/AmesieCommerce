@@ -353,7 +353,7 @@ export default function CategoryPage() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.gridContainer}
         renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => router.push(`/${item.path}`)}>
+          <TouchableOpacity onPress={() => router.push(`/profile/shopease/${item.path}`)}>
             <View style={[styles.categoryCard, { backgroundColor: item.backgroundColor }]}>
               <Image
                 source={item.image}
@@ -373,27 +373,27 @@ export default function CategoryPage() {
           <Image source={require("../../../assets/images/logo.png")} style={[styles.footerLogo, activeTab === "Amesie" && styles.footerIconActive]} />
           <Text style={[styles.footerLabel, activeTab === "Amesie" && styles.footerLabelActive]}>Amesie</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.footerItem} onPress={() => router.push("/")}>
+        <TouchableOpacity style={styles.footerItem} onPress={() => router.push("/profile/shopease/")}>
           {/* FIXED PATH */}
           <Image source={require("../../../assets/images/home-active.png")} style={[styles.footerIcon, activeTab === "Home" && styles.footerIconActive]} />
           <Text style={[styles.footerLabel, activeTab === "Home" && styles.footerLabelActive]}>Home</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.footerItem} onPress={() => router.push("/category")}>
+        <TouchableOpacity style={styles.footerItem} onPress={() => router.push("/profile/shopease/category")}>
           {/* FIXED PATH */}
           <Image source={require("../../../assets/images/category.png")} style={[styles.footerIcon, activeTab === "Categories" && styles.footerIconActive]} />
           <Text style={[styles.footerLabel, activeTab === "Categories" && styles.footerLabelActive]}>Categories</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.footerItem} onPress={() => router.push("/bag")}>
+        <TouchableOpacity style={styles.footerItem} onPress={() => router.push("/profile/shopease/bag")}>
           {/* FIXED PATH */}
           <Image source={require("../../../assets/images/bag.png")} style={[styles.footerIcon, activeTab === "Bag" && styles.footerIconActive]} />
           <Text style={[styles.footerLabel, activeTab === "Bag" && styles.footerLabelActive]}>Bag</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.footerItem} onPress={() => router.push("/wishlist")}>
+        <TouchableOpacity style={styles.footerItem} onPress={() => router.push("/profile/shopease/wishlist")}>
           {/* FIXED PATH */}
           <Image source={require("../../../assets/images/heart.png")} style={[styles.footerIcon, activeTab === "Wishlist" && styles.footerIconActive]} />
           <Text style={[styles.footerLabel, activeTab === "Wishlist" && styles.footerLabelActive]}>Wishlist</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.footerItem} onPress={() => router.push("/account")}>
+        <TouchableOpacity style={styles.footerItem} onPress={() => router.push("/profile/shopease/account")}>
           {/* FIXED PATH */}
           <Image source={require("../../../assets/images/account.png")} style={[styles.footerIcon, activeTab === "Account" && styles.footerIconActive]} />
           <Text style={[styles.footerLabel, activeTab === "Account" && styles.footerLabelActive]}>Account</Text>
