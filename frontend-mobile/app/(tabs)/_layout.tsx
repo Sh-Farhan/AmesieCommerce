@@ -19,31 +19,70 @@ export default function TabLayout() {
         tabBarBackground: TabBarBackground,
         tabBarStyle: Platform.select({
           ios: {
-            // Use a transparent background on iOS to show the blur effect
             position: 'absolute',
           },
           default: {},
         }),
-      }}>
+      }}
+    >
+      {/* Main visible tabs */}
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Index',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          title: 'Home',
+          tabBarIcon: ({ color }) => (
+            <IconSymbol size={28} name="house.fill" color={color} />
+          ),
         }}
       />
-        <Tabs.Screen
+      <Tabs.Screen
         name="login"
         options={{
           title: 'Login',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          tabBarIcon: ({ color }) => (
+            <IconSymbol size={28} name="person.fill" color={color} />
+          ),
         }}
       />
-        <Tabs.Screen
+      <Tabs.Screen
         name="signup"
         options={{
           title: 'Signup',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          tabBarIcon: ({ color }) => (
+            <IconSymbol size={28} name="person.badge.plus" color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="coffee"
+        options={{
+          title: 'Coffee',
+          tabBarIcon: ({ color }) => (
+            <IconSymbol size={28} name="cup.and.saucer.fill" color={color} />
+          ),
+        }}
+      />
+
+      {/* Coffee flow screens: hidden from tab bar + no bottom bar */}
+      <Tabs.Screen
+        name="coffee-detail"
+        options={{
+          tabBarButton: () => null,          // hide from bar
+          tabBarStyle: { display: 'none' },  // hide bar when active
+        }}
+      />
+      <Tabs.Screen
+        name="coffee-cart"
+        options={{
+          tabBarButton: () => null,
+          tabBarStyle: { display: 'none' },
+        }}
+      />
+      <Tabs.Screen
+        name="coffee-delivery"
+        options={{
+          tabBarButton: () => null,
+          tabBarStyle: { display: 'none' },
         }}
       />
     </Tabs>
