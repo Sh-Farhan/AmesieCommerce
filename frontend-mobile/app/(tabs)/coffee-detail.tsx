@@ -1,3 +1,4 @@
+// app/(tabs)/coffee-detail.tsx
 import React, { useMemo, useState } from "react";
 import {
   SafeAreaView,
@@ -9,6 +10,10 @@ import {
 } from "react-native";
 import { useRouter } from "expo-router";
 import { useCart } from "../store/cart";
+
+const BROWN = "#3b2415";
+const LIGHT_BROWN = "#5b3620";
+const ACCENT = "#f2a94f";
 
 const SIZES = [
   { id: "250", label: "250 ml", ml: 250, price: 5.99 },
@@ -89,10 +94,7 @@ export default function CoffeeDetailScreen() {
                 return (
                   <TouchableOpacity
                     key={size.id}
-                    style={[
-                      styles.chip,
-                      isActive && styles.chipActive,
-                    ]}
+                    style={[styles.chip, isActive && styles.chipActive]}
                     onPress={() => setSelectedSizeId(size.id)}
                   >
                     <Text
@@ -153,10 +155,6 @@ export default function CoffeeDetailScreen() {
     </SafeAreaView>
   );
 }
-
-const BROWN = "#3b2415";
-const LIGHT_BROWN = "#5b3620";
-const ACCENT = "#f2a94f";
 
 const styles = StyleSheet.create({
   safeArea: {

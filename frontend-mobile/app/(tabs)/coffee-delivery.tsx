@@ -1,3 +1,4 @@
+// app/(tabs)/coffee-delivery.tsx
 import React, { useMemo, useState } from "react";
 import {
   SafeAreaView,
@@ -7,9 +8,11 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  Alert,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { useCart } from "../store/cart";
+import { submitCoffeeOrder } from "../lib/api";
 
 const BROWN = "#3b2415";
 const ACCENT = "#f2a94f";
@@ -20,14 +23,15 @@ export default function CoffeeDeliveryScreen() {
 
   const [address, setAddress] = useState("");
   const [note, setNote] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   const total = useMemo(
     () => cart.reduce((sum, item) => sum + item.qty * item.price, 0),
     [cart]
   );
 
-  const handleConfirmOrder = () => {
-    if (!cart.length) return;
+  const handleConfirmOrder = async () => {
+    if (!cart.length || !address.trim() || submitting) return;
 
     const order = {
       items: cart,
@@ -39,8 +43,23 @@ export default function CoffeeDeliveryScreen() {
 
     console.log("ORDER TO SEND TO BACKEND ->", order);
 
-    clearCart();
-    router.replace("/coffee");
+    try {
+      setSubmitting(true);
+
+      // yahi se REAL backend hit hoga: POST /api/mobile-coffee-orders
+      await submitCoffeeOrder(order);
+
+      clearCart();
+      router.replace("/coffee");
+    } catch (err: any) {
+      console.error("ORDER SUBMIT FAILED", err);
+      Alert.alert(
+        "Order failed",
+        err?.message || "Something went wrong while placing the order."
+      );
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -82,10 +101,7 @@ export default function CoffeeDeliveryScreen() {
           <Text style={styles.cardLabel}>Order summary</Text>
 
           {cart.map((item) => (
-            <View
-              key={`${item.id}-${item.size}`}
-              style={styles.summaryRow}
-            >
+            <View key={`${item.id}-${item.size}`} style={styles.summaryRow}>
               <Text style={styles.summaryItemText}>
                 {item.name} x{item.qty}
               </Text>
@@ -110,12 +126,15 @@ export default function CoffeeDeliveryScreen() {
         <TouchableOpacity
           style={[
             styles.primaryButton,
-            (!cart.length || !address.trim()) && styles.primaryDisabled,
+            (!cart.length || !address.trim() || submitting) &&
+              styles.primaryDisabled,
           ]}
-          disabled={!cart.length || !address.trim()}
+          disabled={!cart.length || !address.trim() || submitting}
           onPress={handleConfirmOrder}
         >
-          <Text style={styles.primaryButtonText}>Confirm order</Text>
+          <Text style={styles.primaryButtonText}>
+            {submitting ? "Placing order..." : "Confirm order"}
+          </Text>
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
@@ -203,4 +222,3 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
 });
-

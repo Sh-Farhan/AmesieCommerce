@@ -1,3 +1,4 @@
+// app/(tabs)/coffee-cart.tsx
 import React from "react";
 import {
   SafeAreaView,
@@ -9,6 +10,7 @@ import {
 } from "react-native";
 import { useRouter } from "expo-router";
 import { useCart } from "../store/cart";
+
 const BROWN = "#3b2415";
 const ACCENT = "#f2a94f";
 
@@ -18,17 +20,17 @@ export default function CoffeeCartScreen() {
 
   const total = cart.reduce((sum, item) => sum + item.qty * item.price, 0);
 
-  const handleProceed = () => {
-    if (cart.length === 0) return;
-    router.push("/coffee-delivery");
-  };
-
   const changeQty = (id: string, size: string, delta: number) => {
     const item = cart.find((c) => c.id === id && c.size === size);
     if (!item) return;
     const next = item.qty + delta;
-    if (next <= 0) return;
+    if (next < 0) return;
     updateQty(id, size, next);
+  };
+
+  const handleProceed = () => {
+    if (!cart.length) return;
+    router.push("/coffee-delivery");
   };
 
   return (
@@ -37,11 +39,25 @@ export default function CoffeeCartScreen() {
         <Text style={styles.headerTitle}>Your Cart</Text>
 
         {cart.length === 0 ? (
-          <Text style={styles.emptyText}>Your cart is empty.</Text>
+          <View style={styles.emptyBox}>
+            <Text style={styles.emptyText}>Your cart is empty.</Text>
+            <Text style={styles.emptySubText}>
+              Add a drink from the Coffee section to get started.
+            </Text>
+            <TouchableOpacity
+              style={styles.secondaryButton}
+              onPress={() => router.replace("/coffee")}
+            >
+              <Text style={styles.secondaryButtonText}>Back to Coffee</Text>
+            </TouchableOpacity>
+          </View>
         ) : (
           <>
             {cart.map((item) => (
-              <View key={`${item.id}-${item.size}`} style={styles.cartCard}>
+              <View
+                key={`${item.id}-${item.size}`}
+                style={styles.cartCard}
+              >
                 <View style={styles.cartRowTop}>
                   <View style={{ flex: 1 }}>
                     <Text style={styles.itemName}>{item.name}</Text>
@@ -81,9 +97,9 @@ export default function CoffeeCartScreen() {
             <TouchableOpacity
               style={[
                 styles.primaryButton,
-                cart.length === 0 && styles.primaryButtonDisabled,
+                !cart.length && styles.primaryButtonDisabled,
               ]}
-              disabled={cart.length === 0}
+              disabled={!cart.length}
               onPress={handleProceed}
             >
               <Text style={styles.primaryButtonText}>Proceed to Delivery</Text>
@@ -110,9 +126,6 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: "700",
     marginBottom: 24,
-  },
-  emptyText: {
-    color: "#f1e0ce",
   },
   cartCard: {
     backgroundColor: "#5b3620",
@@ -191,5 +204,36 @@ const styles = StyleSheet.create({
     color: BROWN,
     fontSize: 16,
     fontWeight: "700",
+  },
+  emptyBox: {
+    marginTop: 40,
+    backgroundColor: "#5b3620",
+    borderRadius: 20,
+    padding: 20,
+    alignItems: "center",
+  },
+  emptyText: {
+    color: "#ffffff",
+    fontSize: 16,
+    fontWeight: "600",
+    marginBottom: 4,
+  },
+  emptySubText: {
+    color: "#f1e0ceaa",
+    fontSize: 14,
+    textAlign: "center",
+    marginBottom: 16,
+  },
+  secondaryButton: {
+    borderRadius: 22,
+    borderWidth: 1,
+    borderColor: ACCENT,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+  },
+  secondaryButtonText: {
+    color: ACCENT,
+    fontSize: 14,
+    fontWeight: "600",
   },
 });

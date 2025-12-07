@@ -10,6 +10,8 @@ import uvicorn
 from sqlalchemy.orm import Session
 import logging
 
+from typing import List, Optional, Any, Dict
+from pydantic import BaseModel
 from core.database import engine, SessionLocal, Base
 from routers import auth, products, cart, orders, users, sellers
 from db import models
@@ -42,7 +44,7 @@ async def log_requests(request: Request, call_next):
     try:
         response = await call_next(request)
         process_time = time.time() - start_time
-        
+
         logger.info(
             f"{request.method} {request.url.path} - "
             f"Status: {response.status_code} - "
@@ -68,6 +70,11 @@ app.mount("/static", StaticFiles(directory=static_dir), name="static")
 import os
 template_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "frontend", "templates")
 templates = Jinja2Templates(directory=template_dir)
+
+# Simple health check route for Gateway and uptime monitoring
+@app.get("/health")
+async def health_check():
+    return {"ok": True, "msg": "Backend live and responding"}
 
 # Include routers
 app.include_router(auth.router, prefix="/api/auth", tags=["authentication"])
@@ -165,6 +172,44 @@ async def seller_profile_page(request: Request):
 @app.get("/admin/dashboard", response_class=HTMLResponse)
 async def admin_dashboard_page(request: Request):
     return templates.TemplateResponse("admin_dashboard.html", {"request": request})
+
+
+# =========================
+# =========================
+# Mobile Coffee Orders API
+# =========================
+
+@app.post("/api/mobile-coffee-orders", tags=["mobile-coffee"])
+async def create_mobile_coffee_order(order: Dict[str, Any]):
+    """
+    Mobile coffee endpoint - accepts whatever JSON the app sends.
+
+    Frontend sends something like:
+    {
+      "items": [...],
+      "address": "...",
+      "note": "...",
+      "total": 5.99,
+      "createdAt": "2025-12-07T..."
+    }
+    """
+    logger.info(f"[MOBILE-COFFEE] RAW ORDER PAYLOAD: {order}")
+
+    items = order.get("items", [])
+    address = order.get("address")
+    total = order.get("total")
+
+    # Yahan future me:
+    # - order ko internal OrderCreate me map kar sakte ho
+    # - /api/orders/create ko call kar sakte ho
+    # - auth se user_id nikal sakte ho
+
+    return {
+      "status": "ok",
+      "items_count": len(items) if isinstance(items, list) else 0,
+      "total": total,
+      "address": address,
+    }
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)

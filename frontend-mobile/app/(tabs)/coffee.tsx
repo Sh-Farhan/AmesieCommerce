@@ -1,71 +1,205 @@
 // app/(tabs)/coffee.tsx
-
 import React, { useState } from "react";
 import {
-  View,
-  Text,
-  StyleSheet,
+  SafeAreaView,
   ScrollView,
+  StyleSheet,
+  Text,
   TouchableOpacity,
+  View,
 } from "react-native";
-import { Link } from "expo-router";
+import { useRouter } from "expo-router";
 
-const BROWN = "#3B2416";
-const BROWN_LIGHT = "#5a3824";
-const PANEL = "#261710";
-const ACCENT = "#D59A61";
-const TEXT_LIGHT = "#F9F4ED";
+const BROWN = "#3b2415";
+const DARK = "#2a180f";
+const CARD = "#5b3620";
+const ACCENT = "#f2a94f";
+const LIGHT_TEXT = "#f1e0ce";
 
-const CATEGORIES = ["Coffee", "Tea", "Snacks", "Dessert"] as const;
+type Category = "Coffee" | "Tea" | "Snacks" | "Dessert";
 
-const FEATURED_ITEMS = [
+type Product = {
+  id: string;
+  name: string;
+  subtitle: string;
+  price: number;
+};
+
+const PRODUCTS: Record<
+  Category,
   {
-    id: "espresso-brown",
-    name: "Espresso Brown Coffee",
-    tag: "Complex flavour",
-    price: 5.99,
+    featured: Product[];
+    popular: Product[];
+  }
+> = {
+  Coffee: {
+    featured: [
+      {
+        id: "espresso",
+        name: "Espresso Brown Coffee",
+        subtitle: "Complex flavour",
+        price: 5.99,
+      },
+      {
+        id: "iced-brown",
+        name: "Iced Brown Coffee",
+        subtitle: "Smooth & creamy",
+        price: 5.49,
+      },
+    ],
+    popular: [
+      {
+        id: "americano",
+        name: "Americano",
+        subtitle: "Smoothly bold",
+        price: 4.99,
+      },
+      {
+        id: "macchiato",
+        name: "Macchiato",
+        subtitle: "Shot of espresso",
+        price: 5.29,
+      },
+      {
+        id: "latte",
+        name: "Latte",
+        subtitle: "Creamy, classic flavour",
+        price: 5.39,
+      },
+    ],
   },
-  {
-    id: "iced-brown",
-    name: "Iced Brown Coffee",
-    tag: "Smooth & creamy",
-    price: 5.49,
+  Tea: {
+    featured: [
+      {
+        id: "masala-tea",
+        name: "Masala Chai",
+        subtitle: "Spiced Indian tea",
+        price: 3.99,
+      },
+      {
+        id: "green-tea",
+        name: "Jasmine Green Tea",
+        subtitle: "Light & refreshing",
+        price: 3.49,
+      },
+    ],
+    popular: [
+      {
+        id: "english",
+        name: "English Breakfast",
+        subtitle: "Strong classic blend",
+        price: 3.29,
+      },
+      {
+        id: "earl-grey",
+        name: "Earl Grey",
+        subtitle: "Citrusy & aromatic",
+        price: 3.59,
+      },
+    ],
   },
-];
-
-const POPULAR_ITEMS = [
-  { id: "americano", name: "Americano", tag: "Simplicity itself", price: 3.99 },
-  { id: "macchiato", name: "Macchiato", tag: "2 shots of espresso", price: 4.99 },
-  { id: "latte", name: "Latte", tag: "Complex flavour", price: 5.99 },
-];
+  Snacks: {
+    featured: [
+      {
+        id: "croissant",
+        name: "Butter Croissant",
+        subtitle: "Flaky & warm",
+        price: 2.99,
+      },
+      {
+        id: "brownie",
+        name: "Chocolate Brownie",
+        subtitle: "Rich & fudgy",
+        price: 3.49,
+      },
+    ],
+    popular: [
+      {
+        id: "cookies",
+        name: "Choco Chip Cookies",
+        subtitle: "Box of 3",
+        price: 2.79,
+      },
+      {
+        id: "sandwich",
+        name: "Grilled Sandwich",
+        subtitle: "Cheese & veggies",
+        price: 4.49,
+      },
+    ],
+  },
+  Dessert: {
+    featured: [
+      {
+        id: "tiramisu",
+        name: "Tiramisu Cup",
+        subtitle: "Coffee layered dessert",
+        price: 4.99,
+      },
+      {
+        id: "cheesecake",
+        name: "Baked Cheesecake",
+        subtitle: "Creamy & smooth",
+        price: 4.79,
+      },
+    ],
+    popular: [
+      {
+        id: "pudding",
+        name: "Caramel Pudding",
+        subtitle: "Soft & silky",
+        price: 3.99,
+      },
+      {
+        id: "icecream",
+        name: "Vanilla Ice Cream",
+        subtitle: "Scoop of 2",
+        price: 3.49,
+      },
+    ],
+  },
+};
 
 export default function CoffeeHomeScreen() {
-  const [activeCategory, setActiveCategory] =
-    useState<(typeof CATEGORIES)[number]>("Coffee");
+  const router = useRouter();
+  const [category, setCategory] = useState<Category>("Coffee");
+
+  const data = PRODUCTS[category];
+
+  const handleGetStarted = () => {
+    router.push("/coffee-detail");
+  };
+
+  const handleProductPress = (item: Product) => {
+    // Abhi sab same Coffee detail pe jaayenge
+    router.push("/coffee-detail");
+  };
 
   return (
-    <View style={styles.screen}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView contentContainerStyle={styles.container}>
         {/* Header */}
-        <View style={styles.header}>
-          <Text style={styles.headerTitle}>Hello, Guest</Text>
-          <Text style={styles.headerSubtitle}>Discover premium drinks</Text>
+        <View style={styles.headerRow}>
+          <View>
+            <Text style={styles.greeting}>Hello, Guest</Text>
+            <Text style={styles.subGreeting}>Discover premium drinks</Text>
+          </View>
         </View>
 
-        {/* Category pills */}
-        <View style={styles.categoryRow}>
-          {CATEGORIES.map((cat) => {
-            const active = cat === activeCategory;
+        {/* Category tabs */}
+        <View style={styles.tabRow}>
+          {(["Coffee", "Tea", "Snacks", "Dessert"] as Category[]).map((cat) => {
+            const isActive = category === cat;
             return (
               <TouchableOpacity
                 key={cat}
-                onPress={() => setActiveCategory(cat)}
-                style={[styles.categoryChip, active && styles.categoryChipActive]}
+                style={[styles.tabChip, isActive && styles.tabChipActive]}
+                onPress={() => setCategory(cat)}
               >
                 <Text
                   style={[
-                    styles.categoryText,
-                    active && styles.categoryTextActive,
+                    styles.tabChipText,
+                    isActive && styles.tabChipTextActive,
                   ]}
                 >
                   {cat}
@@ -75,234 +209,204 @@ export default function CoffeeHomeScreen() {
           })}
         </View>
 
-        {/* Hero panel */}
-        <View style={styles.heroPanel}>
-          <Text style={styles.heroLabel}>Featured</Text>
-          <Text style={styles.heroTitle}>AMAZING TASTE OF COFFEE</Text>
-          <Text style={styles.heroBody}>
-            Prepare to tantalize your taste buds with a smooth premium blend.
+        {/* Hero section */}
+        <View style={styles.heroCard}>
+          <Text style={styles.heroEyebrow}>
+            AMAZING TASTE OF {category.toUpperCase()}
+          </Text>
+          <Text style={styles.heroTitle}>
+            Prepare to tantalize your taste buds
+          </Text>
+          <Text style={styles.heroSubtitle}>
+            Enjoy a smooth premium blend with rich flavour, crafted for a
+            focused work session or a slow evening.
           </Text>
 
-          <TouchableOpacity style={styles.heroButton}>
+          <TouchableOpacity
+            style={styles.heroButton}
+            onPress={handleGetStarted}
+          >
             <Text style={styles.heroButtonText}>Get Started</Text>
           </TouchableOpacity>
         </View>
 
-        {/* Featured section */}
+        {/* Featured */}
         <Text style={styles.sectionTitle}>Featured</Text>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.featuredRow}
-        >
-          {FEATURED_ITEMS.map((item, index) => {
-            const card = (
-              <View key={item.id} style={styles.featuredCard}>
-                <Text style={styles.cardTitle}>{item.name}</Text>
-                <Text style={styles.cardTag}>{item.tag}</Text>
-                <Text style={styles.cardPrice}>${item.price.toFixed(2)}</Text>
-              </View>
-            );
-
-            // First featured card → navigate to detail screen
-            if (index === 0) {
-              return (
-                <Link
-                  key={item.id}
-                  href="/(tabs)/coffee-detail"
-                  asChild
-                >
-                  <TouchableOpacity activeOpacity={0.85}>
-                    {card}
-                  </TouchableOpacity>
-                </Link>
-              );
-            }
-
-            // Other cards static for now
-            return card;
-          })}
-        </ScrollView>
-
-        {/* Popular list */}
-        <View style={styles.popularHeaderRow}>
-          <Text style={styles.sectionTitle}>Popular</Text>
-          <Text style={styles.viewAll}>View all</Text>
+        <View style={styles.cardRow}>
+          {data.featured.map((item) => (
+            <TouchableOpacity
+              key={item.id}
+              style={styles.productCard}
+              onPress={() => handleProductPress(item)}
+            >
+              <Text style={styles.productName}>{item.name}</Text>
+              <Text style={styles.productSubtitle}>{item.subtitle}</Text>
+              <Text style={styles.productPrice}>${item.price.toFixed(2)}</Text>
+            </TouchableOpacity>
+          ))}
         </View>
 
+        {/* Popular */}
+        <Text style={[styles.sectionTitle, { marginTop: 24 }]}>Popular</Text>
         <View style={styles.popularList}>
-          {POPULAR_ITEMS.map((item) => (
-            <View key={item.id} style={styles.popularRow}>
-              <View style={styles.popularTextBlock}>
+          {data.popular.map((item) => (
+            <TouchableOpacity
+              key={item.id}
+              style={styles.popularRow}
+              onPress={() => handleProductPress(item)}
+            >
+              <View>
                 <Text style={styles.popularName}>{item.name}</Text>
-                <Text style={styles.popularTag}>{item.tag}</Text>
+                <Text style={styles.popularSubtitle}>{item.subtitle}</Text>
               </View>
-              <Text style={styles.popularPrice}>${item.price.toFixed(2)}</Text>
-            </View>
+              <Text style={styles.popularPrice}>
+                ${item.price.toFixed(2)}
+              </Text>
+            </TouchableOpacity>
           ))}
         </View>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  screen: {
+  safeArea: {
     flex: 1,
     backgroundColor: BROWN,
   },
-  scrollContent: {
-    paddingHorizontal: 16,
+  container: {
+    paddingHorizontal: 20,
     paddingTop: 24,
     paddingBottom: 32,
   },
-  header: {
+  headerRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 16,
   },
-  headerTitle: {
-    color: TEXT_LIGHT,
+  greeting: {
+    color: LIGHT_TEXT,
     fontSize: 20,
     fontWeight: "700",
   },
-  headerSubtitle: {
-    color: "#e2d2c4",
-    fontSize: 13,
+  subGreeting: {
+    color: "#f1e0ceaa",
     marginTop: 4,
   },
-  categoryRow: {
+  tabRow: {
     flexDirection: "row",
-    gap: 10,
-    marginBottom: 16,
+    marginBottom: 20,
+    gap: 8,
   },
-  categoryChip: {
-    paddingHorizontal: 14,
+  tabChip: {
+    paddingHorizontal: 12,
     paddingVertical: 6,
-    borderRadius: 999,
+    borderRadius: 20,
     borderWidth: 1,
-    borderColor: "#70503A",
+    borderColor: "#f1e0ce33",
+    backgroundColor: DARK,
   },
-  categoryChipActive: {
+  tabChipActive: {
     backgroundColor: ACCENT,
     borderColor: ACCENT,
   },
-  categoryText: {
-    color: "#e2d2c4",
+  tabChipText: {
+    color: "#f1e0cecc",
     fontSize: 13,
   },
-  categoryTextActive: {
+  tabChipTextActive: {
     color: BROWN,
     fontWeight: "700",
   },
-  heroPanel: {
-    backgroundColor: PANEL,
-    borderRadius: 18,
-    paddingVertical: 18,
-    paddingHorizontal: 16,
+  heroCard: {
+    backgroundColor: CARD,
+    borderRadius: 24,
+    padding: 20,
     marginBottom: 24,
   },
-  heroLabel: {
-    color: "#e2d2c4",
+  heroEyebrow: {
+    color: "#f1e0ceaa",
     fontSize: 12,
-    marginBottom: 4,
+    letterSpacing: 1,
   },
   heroTitle: {
-    color: TEXT_LIGHT,
-    fontSize: 18,
+    color: LIGHT_TEXT,
+    fontSize: 20,
     fontWeight: "700",
-    marginBottom: 8,
+    marginTop: 8,
   },
-  heroBody: {
-    color: "#e2d2c4",
-    fontSize: 13,
-    lineHeight: 18,
-    marginBottom: 16,
+  heroSubtitle: {
+    color: "#f1e0ceaa",
+    marginTop: 8,
   },
   heroButton: {
+    marginTop: 16,
     alignSelf: "flex-start",
     backgroundColor: ACCENT,
-    paddingHorizontal: 18,
-    paddingVertical: 8,
-    borderRadius: 999,
+    borderRadius: 24,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
   },
   heroButtonText: {
     color: BROWN,
-    fontSize: 14,
     fontWeight: "700",
   },
   sectionTitle: {
-    color: TEXT_LIGHT,
-    fontSize: 16,
-    fontWeight: "600",
-    marginBottom: 10,
+    color: LIGHT_TEXT,
+    fontSize: 18,
+    fontWeight: "700",
+    marginBottom: 12,
   },
-  featuredRow: {
+  cardRow: {
+    flexDirection: "row",
     gap: 12,
-    paddingBottom: 8,
-    marginBottom: 20,
   },
-  featuredCard: {
-    width: 180,
-    backgroundColor: PANEL,
-    borderRadius: 16,
+  productCard: {
+    flex: 1,
+    backgroundColor: CARD,
+    borderRadius: 20,
     padding: 14,
   },
-  cardTitle: {
-    color: TEXT_LIGHT,
-    fontSize: 15,
-    fontWeight: "600",
-    marginBottom: 4,
-  },
-  cardTag: {
-    color: "#c7b2a1",
-    fontSize: 12,
-    marginBottom: 8,
-  },
-  cardPrice: {
-    color: ACCENT,
-    fontSize: 14,
+  productName: {
+    color: LIGHT_TEXT,
     fontWeight: "700",
+    fontSize: 14,
   },
-  popularHeaderRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 8,
-  },
-  viewAll: {
-    color: "#e2d2c4",
+  productSubtitle: {
+    color: "#f1e0ceaa",
     fontSize: 12,
+    marginTop: 4,
+  },
+  productPrice: {
+    color: ACCENT,
+    fontWeight: "700",
+    marginTop: 10,
   },
   popularList: {
-    backgroundColor: PANEL,
-    borderRadius: 16,
-    paddingVertical: 6,
+    gap: 10,
   },
   popularRow: {
+    backgroundColor: CARD,
+    borderRadius: 18,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: "#3a2618",
-  },
-  popularTextBlock: {
-    flex: 1,
-    marginRight: 8,
   },
   popularName: {
-    color: TEXT_LIGHT,
-    fontSize: 14,
+    color: LIGHT_TEXT,
     fontWeight: "600",
   },
-  popularTag: {
-    color: "#c7b2a1",
+  popularSubtitle: {
+    color: "#f1e0ceaa",
     fontSize: 12,
     marginTop: 2,
   },
   popularPrice: {
     color: ACCENT,
-    fontSize: 14,
     fontWeight: "700",
   },
 });
