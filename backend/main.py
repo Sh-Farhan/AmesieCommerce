@@ -9,9 +9,10 @@ from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 from sqlalchemy.orm import Session
 import logging
-
-from typing import List, Optional, Any, Dict
+from datetime import datetime
+from typing import List, Optional
 from pydantic import BaseModel
+
 from core.database import engine, SessionLocal, Base
 from routers import auth, products, cart, orders, users, sellers
 from db import models
@@ -93,11 +94,13 @@ def get_db():
         db.close()
 
 # Frontend routes
-@app.get("/", response_class=HTMLResponse)
+@app.get("/")
 async def home(request: Request):
-    logger.info(f"Home page accessed from {request.client.host}")
-    return templates.TemplateResponse("index.html", {"request": request})
-
+    logger.info(f"Home root ping from {request.client.host}")
+    return {
+        "ok": True,
+        "msg": "Shopease backend alive (mobile coffee API integrated)"
+    }
 # Customer authentication pages
 @app.get("/login", response_class=HTMLResponse)
 @app.get("/customer/login", response_class=HTMLResponse)
@@ -176,39 +179,82 @@ async def admin_dashboard_page(request: Request):
 
 # =========================
 # =========================
-# Mobile Coffee Orders API
+# Mobile Coffee Orders API → Real Order Insert
 # =========================
 
-@app.post("/api/mobile-coffee-orders", tags=["mobile-coffee"])
-async def create_mobile_coffee_order(order: Dict[str, Any]):
+class MobileCoffeeOrderItem(BaseModel):
+    id: str
+    name: str
+    size: str
+    ml: int
+    qty: int
+    price: float
+
+
+class MobileCoffeeOrderPayload(BaseModel):
+    items: List[MobileCoffeeOrderItem]
+    address: str
+    note: Optional[str] = None
+    total: float
+    createdAt: datetime
+
+
+@app.post("/api/mobile-coffee-orders", tags=["orders"])
+def create_mobile_coffee_order(
+    payload: MobileCoffeeOrderPayload,
+    db: Session = Depends(get_db),
+):
     """
-    Mobile coffee endpoint - accepts whatever JSON the app sends.
-
-    Frontend sends something like:
-    {
-      "items": [...],
-      "address": "...",
-      "note": "...",
-      "total": 5.99,
-      "createdAt": "2025-12-07T..."
-    }
+    Mobile coffee payload → Real Orders DB Entry.
     """
-    logger.info(f"[MOBILE-COFFEE] RAW ORDER PAYLOAD: {order}")
 
-    items = order.get("items", [])
-    address = order.get("address")
-    total = order.get("total")
+    logger.info(f"[MOBILE-ORDER] Payload received: {payload.dict()}")
 
-    # Yahan future me:
-    # - order ko internal OrderCreate me map kar sakte ho
-    # - /api/orders/create ko call kar sakte ho
-    # - auth se user_id nikal sakte ho
+    # 1) Create Order row
+    order = models.Order(
+        user_id=None,                      # guest for now
+        total_amount=payload.total,
+        shipping_address=payload.address,
+        payment_id=None,
+        payment_status="pending",
+        order_status="pending",
+        created_at=payload.createdAt
+    )
+    db.add(order)
+    db.flush()  # generate ID
+
+    # 2) Create OrderItem rows
+    for item in payload.items:
+        # Try to match SKU with product_id
+        product = (
+            db.query(models.Product)
+              .filter(models.Product.sku == item.id)
+              .first()
+        )
+
+        if not product:
+            logger.warning(f"[MOBILE-ORDER] No product found for SKU: {item.id}")
+            continue
+
+        order_item = models.OrderItem(
+            order_id=order.id,
+            product_id=product.id,
+            quantity=item.qty,
+            price=item.price,
+        )
+        db.add(order_item)
+
+    db.commit()
+    db.refresh(order)
+
+    logger.info(f"[MOBILE-ORDER] ORDER #{order.id} created with {len(order.order_items)} items")
 
     return {
-      "status": "ok",
-      "items_count": len(items) if isinstance(items, list) else 0,
-      "total": total,
-      "address": address,
+        "ok": True,
+        "order_id": order.id,
+        "total": order.total_amount,
+        "items_count": len(order.order_items),
+        "message": "Coffee order saved successfully"
     }
 
 if __name__ == "__main__":
