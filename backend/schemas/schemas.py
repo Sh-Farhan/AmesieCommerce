@@ -31,9 +31,9 @@ class User(UserBase):
     id: int
     is_active: bool
     created_at: datetime
-    
+
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 # Token schemas
 class Token(BaseModel):
@@ -54,9 +54,9 @@ class CategoryCreate(CategoryBase):
 
 class Category(CategoryBase):
     id: int
-    
+
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 # Product schemas
 class ProductImageBase(BaseModel):
@@ -71,9 +71,9 @@ class ProductImage(ProductImageBase):
     id: int
     product_id: int
     created_at: datetime
-    
+
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 class ProductBase(BaseModel):
     name: str
@@ -82,14 +82,14 @@ class ProductBase(BaseModel):
     sku: str
     image_url: Optional[str] = None  # Keep for backward compatibility
     stock_quantity: int = 0
-    
+
     # Shipping information
     weight: Optional[float] = None
     length: Optional[float] = None
     width: Optional[float] = None
     height: Optional[float] = None
     shipping_info: Optional[str] = None
-    
+
     category_id: int
     seller_id: Optional[int] = None
 
@@ -116,9 +116,9 @@ class SellerBasic(BaseModel):
     store_name: str
     store_logo_url: Optional[str] = None
     rating: float = 0.0
-    
+
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 class Product(ProductBase):
     id: int
@@ -130,9 +130,9 @@ class Product(ProductBase):
     category: Optional[Category] = None
     seller: Optional[SellerBasic] = None
     images: List[ProductImage] = []
-    
+
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 # Address schemas
 class AddressBase(BaseModel):
@@ -151,9 +151,9 @@ class AddressCreate(AddressBase):
 class Address(AddressBase):
     id: int
     user_id: int
-    
+
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 # Cart schemas
 class CartItemBase(BaseModel):
@@ -168,9 +168,9 @@ class CartItem(CartItemBase):
     user_id: int
     created_at: datetime
     product: Product
-    
+
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 # Order schemas
 class OrderItemBase(BaseModel):
@@ -182,9 +182,9 @@ class OrderItem(OrderItemBase):
     id: int
     order_id: int
     product: Product
-    
+
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 class OrderBase(BaseModel):
     shipping_address: str
@@ -201,9 +201,9 @@ class Order(OrderBase):
     order_status: str
     created_at: datetime
     order_items: List[OrderItem] = []
-    
+
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 # Review schemas
 class ReviewBase(BaseModel):
@@ -219,9 +219,9 @@ class Review(ReviewBase):
     user_id: int
     created_at: datetime
     user: User
-    
+
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 # Wishlist schemas
 class WishlistItemBase(BaseModel):
@@ -235,9 +235,9 @@ class WishlistItem(WishlistItemBase):
     user_id: int
     created_at: datetime
     product: Product
-    
+
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 # Seller schemas
 class SellerBase(BaseModel):
@@ -246,25 +246,25 @@ class SellerBase(BaseModel):
     store_logo_url: Optional[str] = None
     profile_picture_url: Optional[str] = None
     business_license: Optional[str] = None
-    
+
     # Address fields
     street_address: Optional[str] = None
     city: Optional[str] = None
     state: Optional[str] = None
     country: Optional[str] = None
     postal_code: Optional[str] = None
-    
+
     # Bank account details
     account_holder_name: Optional[str] = None
     bank_account_number: Optional[str] = None
     bank_ifsc_code: Optional[str] = None
-    
+
     # Tax information
     gst_number: Optional[str] = None
     pan_number: Optional[str] = None
     vat_number: Optional[str] = None
     tax_id: Optional[str] = None
-    
+
     # Keep for backward compatibility
     store_address: Optional[str] = None
 
@@ -277,25 +277,25 @@ class SellerUpdate(BaseModel):
     store_logo_url: Optional[str] = None
     profile_picture_url: Optional[str] = None
     business_license: Optional[str] = None
-    
+
     # Address fields
     street_address: Optional[str] = None
     city: Optional[str] = None
     state: Optional[str] = None
     country: Optional[str] = None
     postal_code: Optional[str] = None
-    
+
     # Bank account details
     account_holder_name: Optional[str] = None
     bank_account_number: Optional[str] = None
     bank_ifsc_code: Optional[str] = None
-    
+
     # Tax information
     gst_number: Optional[str] = None
     pan_number: Optional[str] = None
     vat_number: Optional[str] = None
     tax_id: Optional[str] = None
-    
+
     store_address: Optional[str] = None
 
 class Seller(SellerBase):
@@ -308,9 +308,9 @@ class Seller(SellerBase):
     created_at: datetime
     updated_at: datetime
     user: User
-    
+
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 # Image upload schemas
 class ImageUploadResponse(BaseModel):
@@ -332,6 +332,6 @@ class Notification(NotificationBase):
     user_id: int
     is_read: bool
     created_at: datetime
-    
+
     class Config:
-        from_attributes = True
+        orm_mode = True

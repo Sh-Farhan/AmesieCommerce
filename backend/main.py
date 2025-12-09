@@ -1,3 +1,4 @@
+ 
 import os
 import time
 from fastapi import FastAPI, Request, Depends, HTTPException, status
@@ -17,7 +18,7 @@ from core.database import engine, SessionLocal, Base
 from routers import auth, products, cart, orders, users, sellers
 from db import models
 from core.logging_config import setup_logging, get_logger
-
+from routers import orders_history
 # Setup logging
 setup_logging()
 logger = get_logger('main')
@@ -84,7 +85,7 @@ app.include_router(cart.router, prefix="/api/cart", tags=["cart"])
 app.include_router(orders.router, prefix="/api/orders", tags=["orders"])
 app.include_router(users.router, prefix="/api/users", tags=["users"])
 app.include_router(sellers.router, prefix="/api/sellers", tags=["sellers"])
-
+app.include_router(orders_history.router, prefix="/api/orders", tags=["orders"])
 # Dependency to get database session
 def get_db():
     db = SessionLocal()
