@@ -69,7 +69,7 @@ def get_current_user(email: str = Depends(verify_token), db: Session = Depends(g
 def authenticate_user(email: str, password: str, db: Session):
     user = db.query(models.User).filter(models.User.email == email).first()
     if not user:
-        return False
+        return None
     if not verify_password(password, user.hashed_password):
-        return False
+        return None
     return user

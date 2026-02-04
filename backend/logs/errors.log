@@ -1,0 +1,8 @@
+2025-10-02 20:28:59,120 - main - ERROR - POST /api/auth/register/seller - ERROR: bcrypt: no backends available -- recommend you install one (e.g. 'pip install bcrypt') - Time: 0.167s - Client: 127.0.0.1
+2025-10-02 20:32:56,576 - main - ERROR - POST /api/auth/register/seller - ERROR: bcrypt: no backends available -- recommend you install one (e.g. 'pip install bcrypt') - Time: 0.133s - Client: 127.0.0.1
+2025-10-02 20:41:52,631 - main - ERROR - POST /api/auth/register/seller - ERROR: bcrypt: no backends available -- recommend you install one (e.g. 'pip install bcrypt') - Time: 0.188s - Client: 127.0.0.1
+2025-10-02 20:42:43,892 - main - ERROR - POST /api/auth/register/seller - ERROR: bcrypt: no backends available -- recommend you install one (e.g. 'pip install bcrypt') - Time: 0.091s - Client: 127.0.0.1
+2025-10-02 20:45:17,084 - main - ERROR - POST /api/auth/register/seller - ERROR: bcrypt: no backends available -- recommend you install one (e.g. 'pip install bcrypt') - Time: 0.071s - Client: 127.0.0.1
+2025-10-02 20:46:23,126 - main - ERROR - POST /api/auth/register/seller - ERROR: bcrypt: no backends available -- recommend you install one (e.g. 'pip install bcrypt') - Time: 0.115s - Client: 127.0.0.1
+2025-12-08 14:04:50,416 - main - ERROR - GET / - ERROR: index.html - Time: 0.004s - Client: 127.0.0.1
+2025-12-08 14:06:07,822 - main - ERROR - GET / - ERROR: index.html - Time: 0.002s - Client: 127.0.0.1

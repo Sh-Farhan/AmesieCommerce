@@ -1,3 +1,4 @@
+ 
 import os
 import time
 from fastapi import FastAPI, Request, Depends, HTTPException, status
@@ -9,12 +10,15 @@ from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 from sqlalchemy.orm import Session
 import logging
+from datetime import datetime
+from typing import List, Optional
+from pydantic import BaseModel
 
 from core.database import engine, SessionLocal, Base
 from routers import auth, products, cart, orders, users, sellers
 from db import models
 from core.logging_config import setup_logging, get_logger
-
+from routers import orders_history
 # Setup logging
 setup_logging()
 logger = get_logger('main')
@@ -42,7 +46,7 @@ async def log_requests(request: Request, call_next):
     try:
         response = await call_next(request)
         process_time = time.time() - start_time
-        
+
         logger.info(
             f"{request.method} {request.url.path} - "
             f"Status: {response.status_code} - "
@@ -69,6 +73,11 @@ import os
 template_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "frontend", "templates")
 templates = Jinja2Templates(directory=template_dir)
 
+# Simple health check route for Gateway and uptime monitoring
+@app.get("/health")
+async def health_check():
+    return {"ok": True, "msg": "Backend live and responding"}
+
 # Include routers
 app.include_router(auth.router, prefix="/api/auth", tags=["authentication"])
 app.include_router(products.router, prefix="/api/products", tags=["products"])
@@ -76,7 +85,7 @@ app.include_router(cart.router, prefix="/api/cart", tags=["cart"])
 app.include_router(orders.router, prefix="/api/orders", tags=["orders"])
 app.include_router(users.router, prefix="/api/users", tags=["users"])
 app.include_router(sellers.router, prefix="/api/sellers", tags=["sellers"])
-
+app.include_router(orders_history.router, prefix="/api/orders", tags=["orders"])
 # Dependency to get database session
 def get_db():
     db = SessionLocal()
@@ -86,11 +95,13 @@ def get_db():
         db.close()
 
 # Frontend routes
-@app.get("/", response_class=HTMLResponse)
+@app.get("/")
 async def home(request: Request):
-    logger.info(f"Home page accessed from {request.client.host}")
-    return templates.TemplateResponse("index.html", {"request": request})
-
+    logger.info(f"Home root ping from {request.client.host}")
+    return {
+        "ok": True,
+        "msg": "Shopease backend alive (mobile coffee API integrated)"
+    }
 # Customer authentication pages
 @app.get("/login", response_class=HTMLResponse)
 @app.get("/customer/login", response_class=HTMLResponse)
@@ -166,5 +177,86 @@ async def seller_profile_page(request: Request):
 async def admin_dashboard_page(request: Request):
     return templates.TemplateResponse("admin_dashboard.html", {"request": request})
 
+
+# =========================
+# =========================
+# Mobile Coffee Orders API → Real Order Insert
+# =========================
+
+class MobileCoffeeOrderItem(BaseModel):
+    id: str
+    name: str
+    size: str
+    ml: int
+    qty: int
+    price: float
+
+
+class MobileCoffeeOrderPayload(BaseModel):
+    items: List[MobileCoffeeOrderItem]
+    address: str
+    note: Optional[str] = None
+    total: float
+    createdAt: datetime
+
+
+@app.post("/api/mobile-coffee-orders", tags=["orders"])
+def create_mobile_coffee_order(
+    payload: MobileCoffeeOrderPayload,
+    db: Session = Depends(get_db),
+):
+    """
+    Mobile coffee payload → Real Orders DB Entry.
+    """
+
+    logger.info(f"[MOBILE-ORDER] Payload received: {payload.dict()}")
+
+    # 1) Create Order row
+    order = models.Order(
+        user_id=None,                      # guest for now
+        total_amount=payload.total,
+        shipping_address=payload.address,
+        payment_id=None,
+        payment_status="pending",
+        order_status="pending",
+        created_at=payload.createdAt
+    )
+    db.add(order)
+    db.flush()  # generate ID
+
+    # 2) Create OrderItem rows
+    for item in payload.items:
+        # Try to match SKU with product_id
+        product = (
+            db.query(models.Product)
+              .filter(models.Product.sku == item.id)
+              .first()
+        )
+
+        if not product:
+            logger.warning(f"[MOBILE-ORDER] No product found for SKU: {item.id}")
+            continue
+
+        order_item = models.OrderItem(
+            order_id=order.id,
+            product_id=product.id,
+            quantity=item.qty,
+            price=item.price,
+        )
+        db.add(order_item)
+
+    db.commit()
+    db.refresh(order)
+
+    logger.info(f"[MOBILE-ORDER] ORDER #{order.id} created with {len(order.order_items)} items")
+
+    return {
+        "ok": True,
+        "order_id": order.id,
+        "total": order.total_amount,
+        "items_count": len(order.order_items),
+        "message": "Coffee order saved successfully"
+    }
+
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=5000, reload=True)
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)

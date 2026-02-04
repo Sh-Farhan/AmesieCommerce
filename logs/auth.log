@@ -1,0 +1,97 @@
+<<<<<<< HEAD
+=======
+2025-09-29 17:01:30,542 - auth - INFO - Login attempt for user: ZAID@GMAIL.COM
+2025-09-29 17:01:31,095 - auth - INFO - Successful login for user: ZAID@GMAIL.COM (Role: SELLER)
+2025-09-29 22:55:15,079 - auth - INFO - Login attempt for user: ZaidKhan
+2025-09-29 22:55:15,108 - auth - WARNING - Failed login attempt for user: ZaidKhan
+2025-09-29 22:56:09,293 - auth - INFO - Login attempt for user: zaidkhan44@gmail.com
+2025-09-29 22:56:09,778 - auth - INFO - Successful login for user: zaidkhan44@gmail.com (Role: SELLER)
+2025-09-30 07:46:45,639 - auth - INFO - Login attempt for user: zaidkhan44@gmail.com
+2025-09-30 07:46:46,421 - auth - INFO - Successful login for user: zaidkhan44@gmail.com (Role: SELLER)
+2025-09-30 08:34:50,134 - auth - INFO - Login attempt for user: zaidkhan44@gmail.com
+2025-09-30 08:34:50,424 - auth - INFO - Successful login for user: zaidkhan44@gmail.com (Role: SELLER)
+2025-09-30 08:38:21,915 - auth - INFO - Login attempt for user: ZaidKhan
+2025-09-30 08:38:21,930 - auth - WARNING - Failed login attempt for user: ZaidKhan
+2025-09-30 08:38:37,176 - auth - INFO - Login attempt for user: zaidkhan44@gmail.com
+2025-09-30 08:38:37,415 - auth - INFO - Successful login for user: zaidkhan44@gmail.com (Role: SELLER)
+2025-09-30 08:51:31,384 - auth - INFO - Login attempt for user: zaidkhan44@gmail.com
+2025-09-30 08:51:31,632 - auth - INFO - Successful login for user: zaidkhan44@gmail.com (Role: SELLER)
+2025-09-30 09:19:57,077 - auth - INFO - Login attempt for user: zaid45@gmail.com
+2025-09-30 09:19:57,353 - auth - INFO - Successful login for user: zaid45@gmail.com (Role: SELLER)
+2025-09-30 09:54:45,940 - auth - INFO - Login attempt for user: seller@example.com
+2025-09-30 09:54:45,966 - auth - WARNING - Failed login attempt for user: seller@example.com
+2025-09-30 09:57:05,821 - auth - INFO - Login attempt for user: new_seller@example.com
+2025-09-30 09:57:05,831 - auth - WARNING - Failed login attempt for user: new_seller@example.com
+2025-09-30 10:03:35,829 - auth - INFO - Login attempt for user: new_seller@example.com
+2025-09-30 10:03:35,837 - auth - WARNING - Failed login attempt for user: new_seller@example.com
+2025-09-30 10:13:27,295 - auth - INFO - Login attempt for user: new_seller@example.com
+2025-09-30 10:13:27,303 - auth - WARNING - Failed login attempt for user: new_seller@example.com
+2025-09-30 10:38:34,520 - auth - INFO - Login attempt for user: seller_140241759208914@example.com
+2025-09-30 10:38:34,604 - auth - WARNING - Failed login attempt for user: seller_140241759208914@example.com
+2025-09-30 11:24:28,825 - auth - INFO - Login attempt for user: seller_1695479520842@example.com
+2025-09-30 11:24:28,910 - auth - WARNING - Failed login attempt for user: seller_1695479520842@example.com
+2025-09-30 11:26:49,583 - auth - INFO - Login attempt for user: zaidauto@example.com
+2025-09-30 11:26:49,593 - auth - WARNING - Failed login attempt for user: zaidauto@example.com
+2025-09-30 11:29:07,456 - auth - INFO - Login attempt for user: zaid45@gmail.com
+2025-09-30 11:29:08,028 - auth - INFO - Successful login for user: zaid45@gmail.com (Role: SELLER)
+2025-09-30 22:35:51,451 - auth - INFO - Login attempt for user: zaid45@gmail.com
+2025-09-30 22:35:52,192 - auth - INFO - Successful login for user: zaid45@gmail.com (Role: SELLER)
+2025-09-30 22:42:41,180 - auth - INFO - Login attempt for user: zaid45@gmail.com
+2025-09-30 22:42:41,734 - auth - INFO - Successful login for user: zaid45@gmail.com (Role: SELLER)
+2025-10-01 19:48:28,565 - auth - INFO - Login attempt for user: zaid45@gmail.com
+2025-10-01 19:48:29,911 - auth - INFO - Successful login for user: zaid45@gmail.com (Role: SELLER)
+2025-10-01 19:58:08,692 - auth - INFO - Login attempt for user: zaid45@gmail.com
+2025-10-01 19:58:09,422 - auth - INFO - Successful login for user: zaid45@gmail.com (Role: SELLER)
+2025-10-01 20:11:22,190 - auth - INFO - Login attempt for user: zaid45@gmail.com
+2025-10-01 20:11:22,660 - auth - INFO - Successful login for user: zaid45@gmail.com (Role: SELLER)
+2025-10-01 20:13:58,638 - auth - INFO - Login attempt for user: zaid45@gmail.com
+2025-10-01 20:13:59,195 - auth - INFO - Successful login for user: zaid45@gmail.com (Role: SELLER)
+2025-10-02 01:36:03,828 - auth - INFO - Login attempt for user: zaid45@gmail.com
+2025-10-02 01:36:04,690 - auth - INFO - Successful login for user: zaid45@gmail.com (Role: SELLER)
+2025-10-02 01:37:49,403 - auth - INFO - Login attempt for user: zaid45@gmail.com
+2025-10-02 01:37:49,925 - auth - INFO - Successful login for user: zaid45@gmail.com (Role: SELLER)
+2025-10-02 01:53:47,474 - auth - INFO - Login attempt for user: zaid45@gmail.com
+2025-10-02 01:53:48,032 - auth - INFO - Successful login for user: zaid45@gmail.com (Role: SELLER)
+2025-10-02 02:02:00,198 - auth - INFO - Login attempt for user: zaid45@gmail.com
+2025-10-02 02:02:00,730 - auth - INFO - Successful login for user: zaid45@gmail.com (Role: SELLER)
+2025-10-02 02:02:19,172 - auth - INFO - Login attempt for user: zaid45@gmail.com
+2025-10-02 02:02:19,690 - auth - INFO - Successful login for user: zaid45@gmail.com (Role: SELLER)
+2025-10-02 17:43:12,020 - auth - INFO - Login attempt for user: zaid45@gmail.com
+2025-10-02 17:43:12,644 - auth - INFO - Successful login for user: zaid45@gmail.com (Role: SELLER)
+2025-10-05 16:58:53,817 - auth - INFO - New user registration attempt: zaid1759663733@example.com
+2025-10-05 16:58:54,318 - auth - INFO - User registered successfully: zaid1759663733@example.com
+2025-10-05 17:03:39,898 - auth - INFO - New user registration attempt: zaid1759664019@example.com
+2025-10-05 17:03:40,247 - auth - INFO - User registered successfully: zaid1759664019@example.com
+2025-10-05 17:03:40,289 - auth - INFO - Login attempt for user: zaid1759664019@example.com
+2025-10-05 17:03:40,615 - auth - INFO - Successful login for user: zaid1759664019@example.com (Role: CUSTOMER)
+2025-10-05 17:03:40,656 - auth - INFO - User profile accessed: zaid1759664019@example.com
+2025-10-05 17:09:15,146 - auth - INFO - New user registration attempt: zaid1759664355@example.com
+2025-10-05 17:09:15,466 - auth - INFO - User registered successfully: zaid1759664355@example.com
+2025-10-05 17:09:15,504 - auth - INFO - Login attempt for user: zaid1759664355@example.com
+2025-10-05 17:09:15,827 - auth - INFO - Successful login for user: zaid1759664355@example.com (Role: CUSTOMER)
+2025-10-05 17:09:15,865 - auth - INFO - User profile accessed: zaid1759664355@example.com
+2025-10-05 18:24:09,407 - auth - INFO - Login attempt for user: seller1759668849@example.com
+2025-10-05 18:24:09,417 - auth - WARNING - Failed login attempt for user: seller1759668849@example.com
+2025-10-05 18:27:37,672 - auth - INFO - Login attempt for user: seller1759669057@example.com
+2025-10-05 18:27:37,680 - auth - WARNING - Failed login attempt for user: seller1759669057@example.com
+2025-10-05 18:42:36,622 - auth - INFO - Login attempt for user: seller1759669956@example.com
+2025-10-05 18:42:36,631 - auth - WARNING - Failed login attempt for user: seller1759669956@example.com
+2025-10-05 18:52:19,294 - auth - INFO - Login attempt for user: seller1759670539@example.com
+2025-10-05 18:52:19,306 - auth - WARNING - Failed login attempt for user: seller1759670539@example.com
+2025-10-05 19:16:37,946 - auth - INFO - New user registration attempt: zaid1759671997@example.com
+2025-10-05 19:16:38,416 - auth - INFO - User registered successfully: zaid1759671997@example.com
+2025-10-05 19:16:38,466 - auth - INFO - Login attempt for user: zaid1759671997@example.com
+2025-10-05 19:16:38,817 - auth - INFO - Successful login for user: zaid1759671997@example.com (Role: CUSTOMER)
+2025-10-05 19:16:38,856 - auth - INFO - User profile accessed: zaid1759671997@example.com
+>>>>>>> 06e23b5 (Tested customer flow (auth, cart, orders working locally))
+2025-10-12 16:42:42,256 - auth - INFO - New user registration attempt: zaidkhan93315@gmail.com
+2025-10-12 16:42:42,784 - auth - INFO - User registered successfully: zaidkhan93315@gmail.com
+2025-10-12 16:42:52,680 - auth - INFO - Login attempt for user: zaidkhan93315@gmail.com
+2025-10-12 16:42:53,072 - auth - INFO - Successful login for user: zaidkhan93315@gmail.com (Role: CUSTOMER)
+2025-10-12 16:42:53,103 - auth - INFO - User profile accessed: zaidkhan93315@gmail.com
+2025-10-12 16:50:56,827 - auth - INFO - Login attempt for user: zaidkhan93315@gmail.com
+2025-10-12 16:50:57,359 - auth - INFO - Successful login for user: zaidkhan93315@gmail.com (Role: CUSTOMER)
+2025-10-12 16:50:59,819 - auth - INFO - User profile accessed: zaidkhan93315@gmail.com
+2025-10-12 16:51:06,436 - auth - INFO - User profile accessed: zaidkhan93315@gmail.com
+2025-10-12 16:51:14,732 - auth - INFO - User profile accessed: zaidkhan93315@gmail.com
+2025-10-12 16:51:19,972 - auth - INFO - User profile accessed: zaidkhan93315@gmail.com
